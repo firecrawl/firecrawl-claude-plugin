@@ -44,6 +44,24 @@ Search the web and return scraped results.
 - Best for: Research, finding current information
 - Returns: Search results with scraped content
 
+### firecrawl_agent
+Autonomous AI agent for complex web data gathering.
+- Best for: Multi-step research, finding data across multiple sources, complex queries
+- Just describe what data you need - the agent searches, navigates, and extracts automatically
+- No URLs required - agent finds the information autonomously
+- Returns: Structured data matching your request
+
+### firecrawl_agent_status
+Check the status of an agent job.
+- Use after starting an agent to monitor progress
+- Poll until status is "completed" or "failed"
+
+### firecrawl_extract
+Extract structured data from web pages using LLM.
+- Best for: Pulling specific fields like prices, names, product details
+- Define a schema for the data you want
+- Returns: Structured JSON matching your schema
+
 ## Available Formats
 
 When scraping, you can request different output formats:
@@ -63,6 +81,8 @@ When scraping, you can request different output formats:
    - Known multiple URLs → `batch_scrape`
    - Unknown pages on a site → `crawl`
    - Need to find pages → `search`
+   - Complex multi-source research → `agent`
+   - Extract specific structured data → `extract`
 
 3. **Handle crawls automatically**: When crawling, always poll `firecrawl_check_crawl_status` until complete - don't ask users to check manually
 
