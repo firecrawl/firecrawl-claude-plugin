@@ -56,12 +56,6 @@ Check the status of an agent job.
 - Use after starting an agent to monitor progress
 - Poll until status is "completed" or "failed"
 
-### firecrawl_extract
-Extract structured data from web pages using LLM.
-- Best for: Pulling specific fields like prices, names, product details
-- Define a schema for the data you want
-- Returns: Structured JSON matching your schema
-
 ## Available Formats
 
 When scraping, you can request different output formats:
@@ -82,7 +76,6 @@ When scraping, you can request different output formats:
    - Unknown pages on a site → `crawl`
    - Need to find pages → `search`
    - Complex multi-source research → `agent`
-   - Extract specific structured data → `extract`
 
 3. **Handle crawls automatically**: When crawling, always poll `firecrawl_check_crawl_status` until complete - don't ask users to check manually
 
