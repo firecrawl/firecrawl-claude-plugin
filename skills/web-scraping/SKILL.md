@@ -1,3 +1,8 @@
+---
+name: web-scraping
+description: Enables intelligent web scraping and data extraction using Firecrawl. Use when extracting content from web pages, crawling sites, or searching the web.
+---
+
 # Web Scraping with Firecrawl
 
 This skill enables intelligent web scraping and data extraction using Firecrawl.
