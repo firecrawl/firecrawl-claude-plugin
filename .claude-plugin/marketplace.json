@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "firecrawl-local",
+  "version": "1.0.0",
+  "description": "Local Firecrawl plugin marketplace",
+  "owner": {
+    "name": "Firecrawl",
+    "email": "hello@firecrawl.dev"
+  },
+  "plugins": [
+    {
+      "name": "firecrawl",
+      "description": "Web scraping and crawling powered by Firecrawl CLI",
+      "source": "./plugins/firecrawl"
+    }
+  ]
+}

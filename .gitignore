@@ -6,3 +6,6 @@
 Thumbs.db
 
 firecrawl-cli-main
+
+# Local plugin testing
+plugins/

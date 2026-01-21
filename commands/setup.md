@@ -1,11 +1,11 @@
 ---
 description: Set up Firecrawl CLI and configure API key
-allowed-tools: Bash
+allowed-tools: Bash, AskUserQuestion
 ---
 
 # Firecrawl Setup
 
-Automatically install and configure the Firecrawl CLI.
+Install and configure the Firecrawl CLI.
 
 ## Step 1: Check if CLI is installed
 
@@ -22,31 +22,49 @@ npm --version 2>/dev/null || echo "NPM_NOT_FOUND"
 
 If npm is available, install:
 ```bash
-npm install -g firecrawl-cli
+npm install -g firecrawl-cli@beta
 ```
 
 If permission denied:
 ```bash
-sudo npm install -g firecrawl-cli
+sudo npm install -g firecrawl-cli@beta
 ```
 
 If npm is NOT available, tell the user to install Node.js from https://nodejs.org
 
-## Step 3: Configure API key
+## Step 3: Check if already configured
 
-Ask the user for their API key (get one at https://firecrawl.dev/app/api-keys)
-
-Test it directly:
 ```bash
-FIRECRAWL_API_KEY="<user-provided-key>" firecrawl scrape https://firecrawl.dev --format summary
+firecrawl credit-usage 2>&1
 ```
 
-If it works, save it permanently to their shell config:
+If this returns credit information, the CLI is already configured - skip to Step 5.
+
+If it shows the auth prompt, proceed to Step 4.
+
+## Step 4: Configure API key
+
+Use `AskUserQuestion` to ask the user how they want to authenticate:
+
+**Question:** "How would you like to authenticate with Firecrawl?"
+**Options:**
+1. "Login with browser (recommended)" - Opens browser to authenticate
+2. "Enter API key manually" - Paste an existing API key
+
+**If browser login:**
+Tell the user to run `firecrawl config` in their terminal and select option 1. The browser will open for authentication.
+
+**If manual API key:**
+Use `AskUserQuestion` to ask for their API key, then set it:
 ```bash
-echo 'export FIRECRAWL_API_KEY="fc-their-key"' >> ~/.zshrc
+export FIRECRAWL_API_KEY="<their-key>" && firecrawl credit-usage
 ```
 
-## Step 4: Verify setup
+If it works, tell them to add this to their shell profile (~/.zshrc or ~/.bashrc) for persistence.
+
+**Get an API key at:** https://firecrawl.dev/app/api-keys
+
+## Step 5: Verify setup
 
 ```bash
 firecrawl credit-usage
@@ -63,7 +81,7 @@ firecrawl credit-usage
 
 | Issue | Solution |
 |-------|----------|
-| `command not found: firecrawl` | Run `npm install -g firecrawl-cli` |
+| `command not found: firecrawl` | Run `npm install -g firecrawl-cli@beta` |
 | `command not found: npm` | Install Node.js from https://nodejs.org |
-| `EACCES: permission denied` | Run `sudo npm install -g firecrawl-cli` |
-| `401 Unauthorized` | Invalid API key - get one at https://firecrawl.dev/app/api-keys |
+| `EACCES: permission denied` | Run `sudo npm install -g firecrawl-cli@beta` |
+| `401 Unauthorized` | Run `firecrawl config` to re-authenticate |
