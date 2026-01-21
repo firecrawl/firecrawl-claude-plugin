@@ -1,64 +1,69 @@
 ---
-description: Set up Firecrawl API key and verify configuration
-allowed-tools: firecrawl_scrape, Read
+description: Set up Firecrawl CLI and configure API key
+allowed-tools: Bash
 ---
 
 # Firecrawl Setup
 
-Help the user configure their Firecrawl API key.
+Automatically install and configure the Firecrawl CLI.
 
-**IMPORTANT: Only use `firecrawl_scrape` and `Read` tools. Do NOT use any other MCP tools like PostHog, docs-search, etc.**
+## Step 1: Check if CLI is installed
 
-## Steps:
+```bash
+firecrawl version 2>/dev/null || echo "NOT_INSTALLED"
+```
 
-1. **Check if Firecrawl is working** by calling the `firecrawl_scrape` tool directly on https://firecrawl.dev with formats: ["summary"]
+## Step 2: Install if needed
 
-2. **If it fails or the tool isn't available**, detect where the plugin is installed and guide the user:
+If not installed, first check if npm is available:
+```bash
+npm --version 2>/dev/null || echo "NPM_NOT_FOUND"
+```
 
-   Use the Read tool to check these files for `"firecrawl@"` in `enabledPlugins`:
-   - `~/.claude/settings.json` (user/global scope)
-   - `.claude/settings.json` (project scope)
-   - `.claude/settings.local.json` (local scope)
+If npm is available, install:
+```bash
+npm install -g firecrawl-cli
+```
 
-3. **Guide the user based on what you found:**
+If permission denied:
+```bash
+sudo npm install -g firecrawl-cli
+```
 
-   If you found the settings file with the plugin enabled, tell them:
+If npm is NOT available, tell the user to install Node.js from https://nodejs.org
 
-   "To use Firecrawl, add your API key to `[THE FILE YOU FOUND]`:
+## Step 3: Configure API key
 
-   ```json
-   {
-     "env": {
-       "FIRECRAWL_API_KEY": "fc-YOUR-API-KEY"
-     }
-   }
-   ```
+Ask the user for their API key (get one at https://firecrawl.dev/app/api-keys)
 
-   If the file already has other settings, just add the `env` section (or add `FIRECRAWL_API_KEY` to existing `env`).
+Test it directly:
+```bash
+FIRECRAWL_API_KEY="<user-provided-key>" firecrawl scrape https://firecrawl.dev --format summary
+```
 
-   **Get your API key at:** https://firecrawl.dev/app/api-keys
+If it works, save it permanently to their shell config:
+```bash
+echo 'export FIRECRAWL_API_KEY="fc-their-key"' >> ~/.zshrc
+```
 
-   **After adding the API key, you MUST restart Claude Code** to load the Firecrawl MCP server, then run `/firecrawl:setup` again to verify."
+## Step 4: Verify setup
 
-4. **If you can't find the plugin in any settings file:**
+```bash
+firecrawl credit-usage
+```
 
-   "Could not detect where Firecrawl is installed.
+## Success Message
 
-   First, install the plugin, then restart Claude Code:
-   ```
-   /plugin install firecrawl@<marketplace>
-   ```
+"Firecrawl CLI is installed and configured! You can now use:
+- `/firecrawl:scrape` - Scrape a single page
+- `/firecrawl:crawl` - Crawl an entire website
+- `/firecrawl:map` - Discover URLs on a site"
 
-   Then add your API key to one of these files:
-   - `~/.claude/settings.json` - Global (all projects)
-   - `.claude/settings.json` - Project (shared with team)
-   - `.claude/settings.local.json` - Local (gitignored, personal)
+## Troubleshooting
 
-   **Important:** After installing the plugin OR adding the API key, you must restart Claude Code."
-
-5. **If it works**, confirm:
-   "Firecrawl is configured correctly! You can now use:
-   - `/firecrawl:scrape` - Scrape a single page
-   - `/firecrawl:crawl` - Crawl an entire website
-   - `/firecrawl:search` - Search the web
-   - `/firecrawl:map` - Discover URLs on a site"
+| Issue | Solution |
+|-------|----------|
+| `command not found: firecrawl` | Run `npm install -g firecrawl-cli` |
+| `command not found: npm` | Install Node.js from https://nodejs.org |
+| `EACCES: permission denied` | Run `sudo npm install -g firecrawl-cli` |
+| `401 Unauthorized` | Invalid API key - get one at https://firecrawl.dev/app/api-keys |

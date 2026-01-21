@@ -1,31 +1,40 @@
 ---
-description: Discover all URLs on a website
-allowed-tools: firecrawl_map
+description: Discover all URLs on a website using the Firecrawl CLI
+allowed-tools: Bash
 ---
 
 # Map Website URLs
 
-Use the Firecrawl map tool to discover all accessible URLs on a website.
+Use the Firecrawl CLI to discover all accessible URLs on a website.
+
+## Command Syntax
+
+```bash
+firecrawl map <url> [options]
+```
 
 ## When mapping:
 
 1. Take the starting URL from the user
-2. Use the `firecrawl_map` tool to discover all pages
-3. Present the URL structure in an organized way (by section, type, or hierarchy)
+2. Run `firecrawl map` to discover all pages
+3. Present the URL structure in an organized way
 4. Offer to crawl or scrape specific discovered pages
 
 ## Options
 
-- `search`: Filter URLs containing specific text
-- `limit`: Maximum number of URLs to return (default: 100)
-- `sitemap`: How to handle sitemaps - "include", "skip", or "only"
-- `includeSubdomains`: Whether to include subdomains
-- `ignoreQueryParameters`: Skip URL query parameters
+| Option | Description |
+|--------|-------------|
+| `--limit <number>` | Maximum URLs to discover (default: 100) |
+| `--search <query>` | Filter URLs containing specific text |
+| `--sitemap <mode>` | Sitemap handling: `include`, `skip`, or `only` |
+| `--include-subdomains` | Include URLs from subdomains |
+| `-o, --output <path>` | Write output to file |
+| `--json` | Output as JSON (default: one URL per line) |
 
-## Use cases
+## Examples
 
-- Understanding site structure before crawling
-- Finding specific pages or content types
-- Creating sitemaps
-- Identifying all pages for comprehensive scraping
-- Discovering blog posts, documentation, or product pages
+```bash
+firecrawl map https://firecrawl.dev
+firecrawl map https://docs.example.com --limit 50 --search "api"
+firecrawl map https://example.com --json -o sitemap.json
+```

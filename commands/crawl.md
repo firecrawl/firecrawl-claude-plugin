@@ -1,46 +1,52 @@
 ---
-description: Crawl an entire website and extract content from multiple pages
-allowed-tools: firecrawl_crawl, firecrawl_check_crawl_status
+description: Crawl an entire website and extract content from multiple pages using the Firecrawl CLI
+allowed-tools: Bash
 ---
 
 # Crawl Website
 
-Use the Firecrawl crawl tool to extract content from multiple pages of a website.
+Use the Firecrawl CLI to extract content from multiple pages of a website.
 
-## Important: Auto-poll for completion
+## Command Syntax
 
-Crawl operations are asynchronous. When you start a crawl:
-1. You'll receive an operation ID
-2. **Automatically** call `firecrawl_check_crawl_status` with that ID
-3. Keep checking until status is "completed" or "failed"
-4. Return the final results to the user
+```bash
+firecrawl crawl <url> [options]
+firecrawl crawl <job-id>  # Check status of existing crawl
+```
 
-Do NOT ask the user to check status manually - handle it automatically.
+## Important: Use --wait for automatic completion
+
+Crawl operations are asynchronous. **Always use `--wait`** to automatically wait for completion:
+
+```bash
+firecrawl crawl https://example.com --wait --progress
+```
+
+Do NOT ask the user to check status manually - handle it automatically with `--wait`.
 
 ## When crawling:
 
 1. Ask the user for the starting URL if not provided
 2. Clarify the scope: how many pages, specific sections, or entire site
-3. Use the `firecrawl_crawl` tool with appropriate parameters
-4. Poll for completion using `firecrawl_check_crawl_status`
-5. Summarize the crawled content and provide structured results
-
-## Available Formats
-
-Same as scrape - you can request:
-- `markdown`, `html`, `rawHtml`, `screenshot`, `links`, `summary`
+3. Run `firecrawl crawl` with `--wait --progress` and appropriate limits
+4. Summarize the crawled content and provide structured results
 
 ## Options
 
-- `maxDepth`: How deep to crawl (default: 2)
-- `limit`: Maximum number of pages to crawl
-- `allowExternalLinks`: Whether to follow external links
-- `includePaths`: URL patterns to include
-- `excludePaths`: URL patterns to exclude
-- `deduplicateSimilarURLs`: Skip similar URLs
+| Option | Description |
+|--------|-------------|
+| `--wait` | Wait for crawl to complete before returning |
+| `--progress` | Show progress while waiting |
+| `--limit <number>` | Maximum number of pages to crawl |
+| `--max-depth <number>` | Maximum crawl depth |
+| `--include-paths <paths>` | Comma-separated URL patterns to include |
+| `--exclude-paths <paths>` | Comma-separated URL patterns to exclude |
+| `-o, --output <path>` | Write output to file |
 
-## Tips
+## Examples
 
-- Consider using the `/map` command first to discover available URLs
-- Set reasonable limits to avoid long wait times
-- Use `includePaths` to focus on specific sections
+```bash
+firecrawl crawl https://docs.example.com --wait --progress
+firecrawl crawl https://example.com --wait --limit 50 --max-depth 3
+firecrawl crawl https://example.com --wait --include-paths "blog,docs"
+```
