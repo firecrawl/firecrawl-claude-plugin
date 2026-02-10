@@ -1,113 +1,74 @@
 # Firecrawl Plugin for Claude Code
 
-Turn any website into clean, LLM-ready markdown or structured data with Firecrawl.
+Turn any website into clean, LLM-ready markdown or structured data — directly from Claude Code.
+
+This plugin adds the [Firecrawl CLI](https://github.com/firecrawl/cli) as a skill to Claude Code, giving it the ability to scrape, search, crawl, and map the web.
 
 ## Features
 
-- **Scrape**: Extract content from any webpage as clean markdown
-- **Crawl**: Automatically discover and extract content from entire websites
-- **Search**: Search the web and get scraped results
-- **Map**: Discover all URLs on a website
+- **Search** - Web search with optional scraping of results (supports web, news, and image sources)
+- **Scrape** - Extract clean markdown content from any webpage, with JavaScript rendering
+- **Map** - Discover all URLs on a website
+- **Crawl** - Extract content from entire websites
 
-All features include automatic JavaScript rendering, anti-bot handling, and proxy rotation.
+All operations include automatic JavaScript rendering, anti-bot handling, and proxy rotation.
 
 ## Installation
 
 ### 1. Install the Plugin
 
-```
-/plugin install firecrawl@claude-plugins-official
-```
+In Claude Code, run `/plugin` and search for **firecrawl**, then select it to install.
 
-**Important:** After installing, restart Claude Code to load the Firecrawl MCP server.
+### 2. Install the Firecrawl CLI
 
-### 2. Set Up Your API Key
+The plugin requires the Firecrawl CLI to be installed globally:
 
-Run `/firecrawl:setup` to configure your API key. It will detect where the plugin is installed and guide you.
-
-Or manually add your API key using one of these methods:
-
-**Option A: Claude Code Settings (Recommended)**
-
-Add to the same settings file where the plugin is enabled:
-```json
-{
-  "env": {
-    "FIRECRAWL_API_KEY": "fc-YOUR-API-KEY"
-  }
-}
-```
-
-File locations by scope:
-- `~/.claude/settings.json` - Global (all projects)
-- `.claude/settings.json` - Project (shared with team)
-- `.claude/settings.local.json` - Local (gitignored, personal)
-
-**Option B: Shell Profile**
 ```bash
-# Add to ~/.zshrc or ~/.bashrc
+npm install -g firecrawl-cli
+```
+
+### 3. Authenticate
+
+Run the following to authenticate via your browser:
+
+```bash
+firecrawl login --browser
+```
+
+Or authenticate with an API key directly:
+
+```bash
+firecrawl login --api-key "fc-YOUR-API-KEY"
+```
+
+You can also set the key as an environment variable (add to `~/.zshrc` or `~/.bashrc` for persistence):
+
+```bash
 export FIRECRAWL_API_KEY=fc-YOUR-API-KEY
 ```
-Note: Running `export` directly in terminal only lasts for that session. Add it to your profile file for persistence.
 
 **Get your free API key at:** https://firecrawl.dev/app/api-keys
 
-### 3. Verify Setup
+### 4. Verify Setup
 
-Restart Claude Code, then run `/firecrawl:setup` to confirm everything is working.
+```bash
+firecrawl --status
+```
+
+You should see your authentication status, concurrency limit, and remaining credits.
 
 ## Usage
 
-### Slash Commands
+Once installed, Claude Code will automatically use Firecrawl for web tasks. Just ask naturally:
 
-| Command | Description |
-|---------|-------------|
-| `/firecrawl:setup` | Configure API key and verify setup |
-| `/firecrawl:scrape` | Scrape a single webpage to markdown |
-| `/firecrawl:crawl` | Crawl an entire website |
-| `/firecrawl:search` | Search the web and scrape results |
-| `/firecrawl:map` | Discover all URLs on a website |
-
-### Available Formats
-
-When scraping, you can request different output formats:
-- `markdown` - Clean markdown content (default)
-- `html` - Raw HTML content
-- `screenshot` - Screenshot of the page
-- `links` - Extract all links
-- `summary` - AI-generated summary
-
-### Direct Tool Usage
-
-The plugin exposes Firecrawl's MCP tools directly:
-
-- `firecrawl_scrape` - Single page scraping
-- `firecrawl_batch_scrape` - Multiple URL scraping
-- `firecrawl_crawl` - Website crawling
-- `firecrawl_check_crawl_status` - Check crawl progress
-- `firecrawl_map` - URL discovery
-- `firecrawl_search` - Web search with scraping
-
-### Examples
-
-**Scrape a documentation page:**
-```
-Scrape https://docs.firecrawl.dev/introduction and summarize the key points
-```
-
-**Get a summary of a page:**
-```
-Scrape https://firecrawl.dev with summary format
-```
-
-**Research a topic:**
+**Search the web:**
 ```
 Search for "best practices for React testing" and compile the key recommendations
 ```
 
-**Crawl a documentation site:**
+**Scrape a page:**
 ```
-Crawl the entire documentation at https://docs.firecrawl.dev and create a summary
+Scrape https://docs.firecrawl.dev/introduction and summarize the key points
 ```
 
 **Discover site structure:**
@@ -115,17 +76,38 @@ Crawl the entire documentation at https://docs.firecrawl.dev and create a summar
 Map all URLs on https://firecrawl.dev
 ```
 
-## Configuration
+**Research a topic:**
+```
+Research the latest developments in AI agents and give me a summary
+```
 
-### Environment Variables
+### CLI Commands
+
+The plugin uses these Firecrawl CLI commands under the hood:
+
+| Command | Description |
+|---------|-------------|
+| `firecrawl search "query"` | Search the web (supports `--sources`, `--scrape`, `--tbs` for time filters) |
+| `firecrawl scrape <url>` | Scrape a single page to markdown |
+| `firecrawl map <url>` | Discover all URLs on a site |
+| `firecrawl --status` | Check auth status, concurrency, and credits |
+
+### Output Files
+
+Results are saved to a `.firecrawl/` directory in your project to keep Claude Code's context window clean:
+
+```
+.firecrawl/search-react_server_components.json
+.firecrawl/docs.github.com-actions-overview.md
+.firecrawl/firecrawl.dev.md
+```
+
+## Configuration
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `FIRECRAWL_API_KEY` | Yes | Your Firecrawl API key |
-| `FIRECRAWL_API_URL` | No | Custom API endpoint (for self-hosted) |
-| `FIRECRAWL_RETRY_MAX_ATTEMPTS` | No | Max retry attempts (default: 3) |
-| `FIRECRAWL_RETRY_INITIAL_DELAY` | No | Initial retry delay in ms (default: 1000) |
-| `FIRECRAWL_CREDIT_WARNING_THRESHOLD` | No | Credit warning threshold (default: 1000) |
+| `FIRECRAWL_API_KEY` | Yes (if not using `firecrawl login`) | Your Firecrawl API key |
+| `FIRECRAWL_API_URL` | No | Custom API endpoint (for self-hosted instances) |
 
 ## Self-Hosted Deployment
 
@@ -135,13 +117,13 @@ Firecrawl can be self-hosted. Set `FIRECRAWL_API_URL` to point to your instance:
 export FIRECRAWL_API_URL=https://your-firecrawl-instance.com
 ```
 
-See [Firecrawl documentation](https://docs.firecrawl.dev) for self-hosting instructions.
+See the [Firecrawl documentation](https://docs.firecrawl.dev) for self-hosting instructions.
 
 ## Resources
 
 - [Firecrawl Documentation](https://docs.firecrawl.dev)
+- [Firecrawl CLI Repository](https://github.com/firecrawl/cli)
 - [API Reference](https://docs.firecrawl.dev/api-reference)
-- [GitHub Repository](https://github.com/mendableai/firecrawl)
 - [Get API Key](https://firecrawl.dev)
 
 ## License
