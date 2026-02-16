@@ -231,8 +231,11 @@ firecrawl browser execute --js 'await page.goto("https://example.com"); console.
 # Execute against a specific session
 firecrawl browser execute --session <id> 'print(await page.title())' -o .firecrawl/browser-result.txt
 
-# List active sessions
+# List all sessions
 firecrawl browser list --json -o .firecrawl/browser-sessions.json
+
+# List only active sessions
+firecrawl browser list active --json -o .firecrawl/browser-sessions.json
 
 # Close last session
 firecrawl browser close
@@ -248,6 +251,7 @@ firecrawl browser close --session <id>
 - `--stream` - Enable live view streaming
 - `--python` - Execute as Python (default)
 - `--js` - Execute as JavaScript
+- `--bash` - Execute bash commands in the sandbox (agent-browser is pre-installed)
 - `--session <id>` - Target specific session (default: last launched session)
 - `-o, --output <path>` - Save to file
 
@@ -256,6 +260,56 @@ firecrawl browser close --session <id>
 - Session auto-saves after `launch` -- no need to pass `--session` for subsequent commands
 - Code receives a pre-configured `page`, `browser`, and `context` objects (no setup needed)
 - Use `print()` to return output from Python execution
+
+### Bash Mode with agent-browser (Recommended for AI Agents)
+
+For AI agents, `--bash` with agent-browser is the simplest approach — run bash commands instead of writing Playwright code. agent-browser is pre-installed in every sandbox with 40+ commands.
+
+```bash
+# Launch a session
+firecrawl browser launch -o .firecrawl/browser-session.json --json
+
+# Navigate to a page
+firecrawl browser execute --bash "agent-browser open https://example.com"
+
+# Snapshot: get an accessibility tree with @ref IDs
+firecrawl browser execute --bash "agent-browser snapshot"
+# Output includes lines like:
+#   @e3 [textbox] Search...
+#   @e5 [link] Sign In
+#   @e8 [button] Submit
+
+# Interact using @ref IDs from the snapshot
+firecrawl browser execute --bash "agent-browser fill @e3 'search query'"
+firecrawl browser execute --bash "agent-browser click @e8"
+
+# Snapshot again to see updated state
+firecrawl browser execute --bash "agent-browser snapshot"
+
+# Extract page content
+firecrawl browser execute --bash "agent-browser scrape" -o .firecrawl/browser-scrape.md
+
+# Discover all available commands
+firecrawl browser execute --bash "agent-browser --help"
+
+# Close
+firecrawl browser close
+```
+
+**Core agent-browser commands:**
+
+| Command | Description |
+|---------|-------------|
+| `open <url>` | Navigate to a URL |
+| `snapshot` | Get accessibility tree with `@ref` IDs |
+| `screenshot` | Capture a PNG screenshot |
+| `click <@ref>` | Click an element by ref |
+| `type <@ref> <text>` | Type into an element |
+| `fill <@ref> <text>` | Fill a form field (clears first) |
+| `scrape` | Extract page content as markdown |
+| `scroll <direction>` | Scroll up/down/left/right |
+| `wait <seconds>` | Wait for a duration |
+| `eval <js>` | Evaluate JavaScript on the page |
 
 ## Reading Scraped Files
 
