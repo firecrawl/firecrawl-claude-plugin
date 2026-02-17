@@ -10,6 +10,7 @@ This plugin adds the [Firecrawl CLI](https://github.com/firecrawl/cli) as a skil
 - **Scrape** - Extract clean markdown content from any webpage, with JavaScript rendering
 - **Map** - Discover all URLs on a website
 - **Crawl** - Extract content from entire websites
+- **Browser** - Launch cloud browser sessions and execute Playwright code remotely
 
 All operations include automatic JavaScript rendering, anti-bot handling, and proxy rotation.
 
@@ -90,6 +91,7 @@ The plugin uses these Firecrawl CLI commands under the hood:
 | `firecrawl search "query"` | Search the web (supports `--sources`, `--scrape`, `--tbs` for time filters) |
 | `firecrawl scrape <url>` | Scrape a single page to markdown |
 | `firecrawl map <url>` | Discover all URLs on a site |
+| `firecrawl browser launch/execute/list/close` | Manage cloud browser sessions and execute Playwright code |
 | `firecrawl --status` | Check auth status, concurrency, and credits |
 
 ### Output Files
