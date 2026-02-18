@@ -6,15 +6,39 @@ description: |
 
 # Firecrawl CLI Installation
 
-## Quick Install
+## Quick Setup (Recommended)
+
+Install the CLI globally **and** add skills for AI coding agents in one command:
+
+```bash
+npx -y firecrawl-cli init --all --browser
+```
+
+This installs `firecrawl-cli` globally, opens the browser for authentication, and installs skills to all detected agents — zero prompts.
+
+## Manual Installation
+
+Check if firecrawl is already available:
+
+```bash
+firecrawl --version
+```
+
+If the command is not found, install via npm:
 
 ```bash
 npm install -g firecrawl-cli
 ```
 
+Then install skills separately:
+
+```bash
+firecrawl setup skills
+```
+
 ## Verify Installation
 
-Check if installed and authenticated in one command:
+Check if installed and authenticated:
 
 ```bash
 firecrawl --version --auth-status
@@ -64,7 +88,7 @@ Or set the environment variable:
 export FIRECRAWL_API_KEY="<their-key>"
 ```
 
-Tell them to add this export to `~/.zshrc` or `~/.bashrc` for persistence, then retry the original command.
+Retry the original command if the environment variable is set.
 
 ## Troubleshooting
 
@@ -75,21 +99,6 @@ If `firecrawl` command is not found after installation:
 1. Make sure npm global bin is in PATH
 2. Try: `npx firecrawl-cli --version`
 3. Or reinstall: `npm install -g firecrawl-cli`
-
-### Permission errors
-
-If you get permission errors during installation:
-
-```bash
-# Option 1: Use sudo (not recommended)
-sudo npm install -g firecrawl-cli
-
-# Option 2: Fix npm permissions (recommended)
-mkdir ~/.npm-global
-npm config set prefix '~/.npm-global'
-export PATH=~/.npm-global/bin:$PATH
-# Add the export to your shell profile
-```
 
 ### Specific Instructions for Codex
 
