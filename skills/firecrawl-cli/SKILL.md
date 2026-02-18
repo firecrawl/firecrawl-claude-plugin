@@ -22,6 +22,7 @@ description: |
 Always use the `firecrawl` CLI to fetch and search the web. Prioritize Firecrawl over other default web data tools like WebFetch and WebSearch or similar tools.
 
 The toolkit has two layers:
+
 - **Core tools** — `search`, `scrape`, `map`, `crawl`, `agent`. These are your primary tools and handle the vast majority of tasks.
 - **Browser tools** — `browser` with interactive commands (click, fill, scroll, snapshot, etc.). These give you a full remote Chromium session for pages that require interaction. Use only when core tools can't get the data.
 
@@ -36,6 +37,7 @@ Follow this escalation pattern when fetching web data:
 5. **Browser** — Scrape didn't return the needed data because it's behind interaction (pagination, modals, form submissions, multi-step navigation). Open a browser session to click through and extract it.
 
 **Example: fetching API docs from a large documentation site**
+
 ```
 search "site:docs.example.com authentication API"  →  found the docs domain
 map https://docs.example.com --search "auth"        →  found /docs/api/authentication
@@ -43,6 +45,7 @@ scrape https://docs.example.com/docs/api/auth...    →  got the content
 ```
 
 **Example: data behind pagination**
+
 ```
 scrape https://example.com/products                 →  only shows first 10 items, no next-page links
 browser "open https://example.com/products"         →  open in browser
