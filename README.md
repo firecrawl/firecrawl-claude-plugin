@@ -1,8 +1,8 @@
 # Firecrawl Plugin for Claude Code
 
-Turn any website into clean, LLM-ready markdown or structured data — directly from Claude Code.
+Turn websites and documents into clean, LLM-ready markdown or structured data directly from Claude Code.
 
-This plugin adds the [Firecrawl CLI](https://github.com/firecrawl/cli) as a skill to Claude Code, giving it the ability to scrape, search, crawl, and map the web.
+This plugin adds the [Firecrawl CLI](https://github.com/firecrawl/cli) as a skill to Claude Code, giving it the ability to scrape, search, crawl, map the web, and parse local documents.
 
 ## Features
 
@@ -10,6 +10,7 @@ This plugin adds the [Firecrawl CLI](https://github.com/firecrawl/cli) as a skil
 - **Scrape** - Extract clean markdown content from any webpage, with JavaScript rendering
 - **Map** - Discover all URLs on a website
 - **Crawl** - Extract content from entire websites
+- **Parse** - Convert local PDF, DOCX, XLSX, and HTML files with `/v2/parse`
 - **Browser** - Launch cloud browser sessions and execute Playwright code remotely
 
 All operations include automatic JavaScript rendering, anti-bot handling, and proxy rotation.
@@ -77,6 +78,11 @@ Scrape https://docs.firecrawl.dev/introduction and summarize the key points
 Map all URLs on https://firecrawl.dev
 ```
 
+**Parse a local document:**
+```
+Parse ./report.pdf and summarize the key findings
+```
+
 **Research a topic:**
 ```
 Research the latest developments in AI agents and give me a summary
@@ -90,6 +96,7 @@ The plugin uses these Firecrawl CLI commands under the hood:
 |---------|-------------|
 | `firecrawl search "query"` | Search the web (supports `--sources`, `--scrape`, `--tbs` for time filters) |
 | `firecrawl scrape <url>` | Scrape a single page to markdown |
+| `firecrawl parse <file>` | Parse a local PDF, DOCX, XLSX, or HTML file |
 | `firecrawl map <url>` | Discover all URLs on a site |
 | `firecrawl browser launch/execute/list/close` | Manage cloud browser sessions and execute Playwright code |
 | `firecrawl --status` | Check auth status, concurrency, and credits |

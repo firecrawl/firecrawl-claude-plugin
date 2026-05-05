@@ -1,7 +1,7 @@
 ---
 name: firecrawl
 description: |
-  Search, scrape, and interact with the web via the Firecrawl CLI. Use this skill whenever the user wants to search the web, find articles, research a topic, look something up online, scrape a webpage, grab content from a URL, get data from a website, crawl documentation, download a site, or interact with pages that need clicks or logins. Also use when they say "fetch this page", "pull the content from", "get the page at https://", or reference external websites. This provides real-time web search with full page content and interact capabilities — beyond what Claude can do natively with built-in tools. Do NOT trigger for local file operations, git commands, deployments, or code editing tasks.
+  Search, scrape, parse, and interact with content via the Firecrawl CLI. Use this skill whenever the user wants to search the web, find articles, research a topic, look something up online, scrape a webpage, grab content from a URL, parse a local document, get data from a website, crawl documentation, download a site, or interact with pages that need clicks or logins. Also use when they say "fetch this page", "pull the content from", "get the page at https://", "parse this PDF", "read this document", or reference external websites or supported local document files. This provides real-time web search, full page content extraction, document parsing, and interact capabilities beyond what Claude can do natively. Do NOT trigger for unrelated local file operations, git commands, deployments, or code editing tasks.
 allowed-tools:
   - Bash(firecrawl *)
   - Bash(npx firecrawl *)
@@ -9,7 +9,7 @@ allowed-tools:
 
 # Firecrawl CLI
 
-Search, scrape, and interact with the web. Returns clean markdown optimized for LLM context windows.
+Search, scrape, parse, and interact with content. Returns clean markdown optimized for LLM context windows.
 
 Run `firecrawl --help` or `firecrawl <command> --help` for full option details.
 
@@ -52,6 +52,7 @@ Follow this escalation pattern:
 3. **Map + Scrape** - Large site or need a specific subpage. Use `map --search` to find the right URL, then scrape it.
 4. **Crawl** - Need bulk content from an entire site section (e.g., all /docs/).
 5. **Interact** - Scrape first, then interact with the page (pagination, modals, form submissions, multi-step navigation).
+6. **Parse** - Have a local or non-public document file. Upload the file bytes to `/v2/parse`.
 
 | Need                        | Command               | When                                                      |
 | --------------------------- | --------------------- | --------------------------------------------------------- |
@@ -62,7 +63,7 @@ Follow this escalation pattern:
 | AI-powered data extraction  | `agent`               | Need structured data from complex sites                   |
 | Interact with a page        | `scrape` + `interact` | Content requires clicks, form fills, pagination, or login |
 | Download a site to files    | `download`            | Save an entire site as local files                        |
-| Parse a local file          | `parse`               | File on disk (PDF, DOCX, XLSX, etc.) — not a URL          |
+| Parse a local file          | `parse`               | File on disk (PDF, DOCX, XLSX, etc.) - not a URL          |
 
 For detailed command reference, run `firecrawl <command> --help`.
 

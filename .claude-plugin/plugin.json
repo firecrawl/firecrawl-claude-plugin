@@ -1,9 +1,9 @@
 {
     "name": "firecrawl",
-    "description": "Scrape, search, crawl, and map the web with a single command.",
+    "description": "Scrape, search, crawl, map the web, and parse local documents with Firecrawl.",
     "version": "1.0.8",
     "author": {
         "name": "Firecrawl"
     },
-    "skills": ["./skills/firecrawl-cli"]
+    "skills": ["./skills/firecrawl-cli", "./skills/firecrawl-parse"]
 }
