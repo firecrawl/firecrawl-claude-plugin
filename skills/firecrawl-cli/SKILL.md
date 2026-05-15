@@ -13,7 +13,7 @@ Search, scrape, and interact with the web. Returns clean markdown optimized for 
 
 Run `firecrawl --help` or `firecrawl <command> --help` for full option details.
 
-If the task is to integrate Firecrawl into an application, add `FIRECRAWL_API_KEY` to a project, or choose endpoint usage in product code, use the `firecrawl-build` skills. They are already installed alongside this CLI skill when you run `firecrawl init`.
+If the task is to integrate Firecrawl into an application, add `FIRECRAWL_API_KEY` to a project, or choose endpoint usage in product code, use the `firecrawl-build` skills. If the task is an outcome workflow such as deep research, SEO audit, QA, lead generation, knowledge-base creation, dashboard reporting, shopping research, or website design-system extraction, use the `firecrawl-workflows` skills. They are already installed alongside this CLI skill when you run `firecrawl init`.
 
 ## Prerequisites
 
@@ -90,6 +90,7 @@ For detailed command reference, run `firecrawl <command> --help`.
 - **Install, auth, or setup problems** -> [rules/install.md](rules/install.md)
 - **Output handling and safe file-reading patterns** -> [rules/security.md](rules/security.md)
 - **Integrating Firecrawl into an app, adding `FIRECRAWL_API_KEY` to `.env`, or choosing endpoint usage in product code** -> use the `firecrawl-build` skills (already installed alongside this CLI skill)
+- **Producing Firecrawl-powered deliverables such as research briefs, SEO audits, QA reports, lead lists, knowledge bases, or design-system extraction** -> use the `firecrawl-workflows` skills (already installed alongside this CLI skill). These skills infer from context first and ask only short blocking questions when needed.
 
 ## Output & Organization
 
