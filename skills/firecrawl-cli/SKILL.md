@@ -76,18 +76,49 @@ For detailed command reference, run `firecrawl <command> --help`.
 
 **Monitor:** Schedule recurring scrapes or crawls and diff each result against the last retained snapshot. Bias toward `monitor` when the user's goal is ongoing change detection, alerting, or repeated checks over time. For a single page, default to setting a monitor with `--page <url>` and `--goal "..."`. Use for product pages, docs, blogs, changelogs, competitor sites — any page where changes matter. Each monitor should include a short `goal` describing what changes matter, and each check labels pages as `same`, `new`, `changed`, `removed`, or `error`, with webhook and email notification options.
 
+When writing `--goal`, convert the user's monitoring intent into a concise 2-3 sentence monitor goal, similar to the web app setup flow:
+
+- Start with `Alert when ...` and state what should trigger an alert using the user's stated intent.
+- Restate scope the user mentioned, such as top N, price, role type, company, region, topic, status, or a specific entity.
+- Include an `Ignore ...` sentence only for intent-specific exclusions that are obvious from the request, such as points/comments for rankings, unrelated marketing copy for pricing, or general company-page updates for jobs.
+- Do not repeat generic noise exclusions in every goal; the judge already handles whitespace, casing, punctuation, encoding, formatting-only changes, request/session IDs, cache busters, tracking params, generic metadata noise, and unrelated page chrome.
+- Do not invent page-specific sections, entities, thresholds, exclusions, or business rules unless the user mentioned them.
+- If the user is vague, keep the goal broad rather than guessing exclusions.
+- If the user asks for "any change", preserve that and do not add exclusions.
+- If the user mentions noise they do not care about, include that explicitly.
+
+Good goal examples:
+
+- User intent: `top 10 hackernews stories`
+  Goal: `Alert when stories enter, leave, or change rank within the Hacker News top 10. Ignore points, comments, and timestamps. Do not alert on changes outside the top 10.`
+- User intent: `pricing changes`
+  Goal: `Alert when pricing information changes, including prices, plan names, billing periods, tiers, limits, or included features. Ignore unrelated marketing copy, testimonials, and regional currency display changes unless the underlying offer changes.`
+- User intent: `new engineering roles`
+  Goal: `Alert when a new engineering role is posted. Ignore general company-page updates unless they add, remove, or change an engineering role.`
+- User intent: `track this page`
+  Goal: `Alert when substantive visible content on this page changes.`
+- User intent: `any change`
+  Goal: `Alert when any visible page content changes, including copy, numbers, timestamps, counters, links, and layout text.`
+
 Subcommands: `create | list | get | update | delete | run | checks | check`.
 
 ```bash
 # create from flags
 firecrawl monitor create --name "Blog" --schedule "every 30 minutes" \
-  --goal "Notify me when a new post is published" \
+  --goal "Alert when a new blog post is published." \
   --page https://example.com/blog --email alerts@example.com
 
 # multiple pages
 firecrawl monitor create --name "Product pages" --schedule "every 30 minutes" \
-  --goal "Notify me when pricing, docs, or changelog content changes" \
+  --goal "Alert when pricing, docs, or changelog content changes." \
   --scrape-urls https://example.com/pricing,https://example.com/docs,https://example.com/changelog
+
+# webhook notifications
+firecrawl monitor create --name "Docs webhook" --schedule "every 30 minutes" \
+  --goal "Alert when docs content changes." \
+  --page https://example.com/docs \
+  --webhook-url https://example.com/webhook \
+  --webhook-events monitor.page,monitor.check.completed
 
 # or from JSON (positional file, or piped stdin)
 firecrawl monitor create monitor.json
