@@ -104,17 +104,17 @@ Subcommands: `create | list | get | update | delete | run | checks | check`.
 
 ```bash
 # create from flags
-firecrawl monitor create --name "Blog" --schedule "every 30 minutes" \
+firecrawl monitor create --name "Blog" --schedule "every 5 minutes" \
   --goal "Alert when a new blog post is published." \
   --page https://example.com/blog --email alerts@example.com
 
 # multiple pages
-firecrawl monitor create --name "Product pages" --schedule "every 30 minutes" \
+firecrawl monitor create --name "Product pages" --schedule "every 5 minutes" \
   --goal "Alert when pricing, docs, or changelog content changes." \
   --scrape-urls https://example.com/pricing,https://example.com/docs,https://example.com/changelog
 
 # webhook notifications
-firecrawl monitor create --name "Docs webhook" --schedule "every 30 minutes" \
+firecrawl monitor create --name "Docs webhook" --schedule "every 5 minutes" \
   --goal "Alert when docs content changes." \
   --page https://example.com/docs \
   --webhook-url https://example.com/webhook \
@@ -132,7 +132,7 @@ firecrawl monitor update <monitorId> --state paused
 firecrawl monitor delete <monitorId>
 ```
 
-Schedules accept cron (`--cron "*/30 * * * *"`) or natural language (`--schedule "every 30 minutes"`). Minimum interval is 15 minutes. Targets are `--page <url>` for one page, `--scrape-urls a,b,c` for multiple scrape URLs, or `--crawl-url <url>` for a whole-site crawl each check. Use `--goal` for flag-based monitor creation, or include `"goal": "..."` in JSON payloads. Note: `--state` (not `--status`) sets active/paused; `--page-status` (not `--status`) filters page results on `check` — avoids collision with the global `--status` flag. Monitoring is not available for zero-data-retention teams.
+Schedules accept cron (`--cron "*/5 * * * *"`) or natural language (`--schedule "every 5 minutes"`). Minimum interval is 5 minutes. Targets are `--page <url>` for one page, `--scrape-urls a,b,c` for multiple scrape URLs, or `--crawl-url <url>` for a whole-site crawl each check. Use `--goal` for flag-based monitor creation, or include `"goal": "..."` in JSON payloads. Note: `--state` (not `--status`) sets active/paused; `--page-status` (not `--status`) filters page results on `check` — avoids collision with the global `--status` flag. Monitoring is not available for zero-data-retention teams.
 
 **JSON-mode change tracking:** By default monitors diff each page's markdown and you get a unified text diff back. When you care about **specific structured fields** (price, headline, in-stock flag, items in a list) instead of the whole page, add a `changeTracking` format with `modes: ["json"]` and a JSON schema to the target's `scrapeOptions.formats`. The flag-based form doesn't cover this — pass a JSON body via file or stdin:
 
