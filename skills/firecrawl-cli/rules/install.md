@@ -12,7 +12,7 @@ description: |
 ## Quick Setup (Recommended)
 
 ```bash
-npx -y firecrawl-cli@1.19.3 init -y --browser
+npx -y firecrawl-cli@1.19.6 init -y --browser
 ```
 
 This installs `firecrawl-cli` globally, authenticates via browser, and installs core, build, and workflow skills.
@@ -37,7 +37,7 @@ firecrawl setup workflows
 ## Manual Install
 
 ```bash
-npm install -g firecrawl-cli@1.19.3
+npm install -g firecrawl-cli@1.19.6
 ```
 
 ## Verify
@@ -79,5 +79,5 @@ Ask the user how they'd like to authenticate:
 If `firecrawl` is not found after installation:
 
 1. Ensure npm global bin is in PATH
-2. Try: `npx firecrawl-cli@1.19.3 --version`
-3. Reinstall: `npm install -g firecrawl-cli@1.19.3`
+2. Try: `npx firecrawl-cli@1.19.6 --version`
+3. Reinstall: `npm install -g firecrawl-cli@1.19.6`
