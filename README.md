@@ -2,7 +2,7 @@
 
 Turn any website into clean, LLM-ready markdown or structured data — directly from Claude Code.
 
-This plugin gives Claude Code full web access through the [Firecrawl CLI](https://github.com/firecrawl/cli): search, scrape, crawl, map, interact, monitor, and AI-powered extraction. Every operation includes JavaScript rendering, anti-bot handling, and proxy rotation.
+This plugin gives Claude Code full web access through the [Firecrawl CLI](https://github.com/firecrawl/cli): search, scrape, crawl, map, interact, monitor, and AI-powered extraction.
 
 ## Install
 
