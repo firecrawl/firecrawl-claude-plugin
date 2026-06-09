@@ -10,21 +10,22 @@ This plugin gives Claude Code full web access through the [Firecrawl CLI](https:
 
 In Claude Code, run `/plugin`, search for **firecrawl**, and install it.
 
-### 2. Install the Firecrawl CLI
+### 2. Set up the Firecrawl CLI
 
-The plugin's skills call the Firecrawl CLI, so install it globally:
+The plugin's skills run through the Firecrawl CLI. The quickest path uses `npx` — no global install, and it signs you in at the same time:
+
+```bash
+npx -y firecrawl-cli@latest login --browser
+```
+
+Prefer a global install (puts `firecrawl` on your PATH for faster calls)?
 
 ```bash
 npm install -g firecrawl-cli
-```
-
-### 3. Sign in
-
-```bash
 firecrawl login --browser
 ```
 
-Prefer not to use the browser? Authenticate with a key instead:
+Either way, you can authenticate with a key instead of the browser:
 
 ```bash
 firecrawl login --api-key "fc-YOUR-API-KEY"
@@ -32,13 +33,7 @@ firecrawl login --api-key "fc-YOUR-API-KEY"
 export FIRECRAWL_API_KEY=fc-YOUR-API-KEY
 ```
 
-Get a free API key at [firecrawl.dev/app/api-keys](https://firecrawl.dev/app/api-keys). Verify everything's ready with:
-
-```bash
-firecrawl --status
-```
-
-You should see your auth status, concurrency limit, and remaining credits.
+Get a free API key at [firecrawl.dev/app/api-keys](https://firecrawl.dev/app/api-keys). Verify with `firecrawl --status` (or `npx firecrawl-cli --status`).
 
 ## Capabilities
 
