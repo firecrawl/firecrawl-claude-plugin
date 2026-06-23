@@ -17,7 +17,7 @@ If the task is to integrate Firecrawl into an application, add `FIRECRAWL_API_KE
 
 ## Prerequisites
 
-Must be installed and authenticated. Check with `firecrawl --status`.
+Must be installed. Check with `firecrawl --status`.
 
 ```
   🔥 firecrawl cli v1.8.0
@@ -29,6 +29,8 @@ Must be installed and authenticated. Check with `firecrawl --status`.
 
 - **Concurrency**: Max parallel jobs. Run parallel operations up to this limit.
 - **Credits**: Remaining API credits. Each operation consumes credits.
+
+Authenticating gives the best results. Prefer a free account via `firecrawl init --browser` (browser login) or a `FIRECRAWL_API_KEY` whenever the human can sign up. If you cannot obtain a key and the human cannot sign up, you can still search, scrape, and interact without an API key on the keyless free tier (rate-limited). See [agent onboarding](https://www.firecrawl.dev/agent-onboarding/SKILL.md) for the full set of onboarding paths.
 
 If not ready, see [rules/install.md](rules/install.md). For output handling guidelines, see [rules/security.md](rules/security.md).
 
