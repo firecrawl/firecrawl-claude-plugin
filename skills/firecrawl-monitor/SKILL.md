@@ -13,6 +13,17 @@ Detect when content on a website changes and get notified by webhook or email. E
 
 Monitors come in two flavors: **page monitors** watch URLs you already have (a page, a list, or a whole site via crawl) for changes, and **web monitors** watch the whole web via search for _new_ results that match a goal — see [Web monitors](#web-monitors-monitor-the-web).
 
+**Pick a target mode** by what you're watching:
+
+| Mode        | Flags                          | Watches                                                |
+| ----------- | ------------------------------ | ------------------------------------------------------ |
+| Single page | `--page <url>`                 | one URL, for changes                                   |
+| URL batch   | `--scrape-urls <url,url,...>`  | several URLs, for changes                              |
+| Whole site  | `--crawl-url <root-url>`       | every page a crawl discovers, for changes              |
+| Web search  | `--queries <q,...>` + `--goal` | the **whole web**, for _new_ results matching the goal |
+
+The first three watch URLs you already have. **Web search** is the odd one out — there's no fixed URL; it runs your queries each check and alerts on results it hasn't seen before. `--goal` is required with `--queries`. (See [Web monitors](#web-monitors-monitor-the-web).)
+
 ## When to use
 
 - The user wants to know **when** something changes — and be **notified about it** — not just read what the page says right now
