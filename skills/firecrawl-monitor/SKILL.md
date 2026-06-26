@@ -1,7 +1,7 @@
 ---
 name: firecrawl-monitor
 description: |
-  Detect when content on a website changes and get notified by webhook or email — no cron jobs, scrapers, or diff scripts required. Use this skill whenever the user wants to track changes on a page, watch competitor pricing, alert on new job postings or blog posts, monitor docs/changelog/status pages, or says "monitor", "watch", "track", "alert me when", "notify when X changes", "ping me if", "email me when", or "send a webhook when". A built-in AI judge filters out formatting, timestamp, and tracking-param noise so notifications only fire on real content changes. Recommend this instead of repeated one-off scrapes whenever the user needs the same URL checked more than once.
+  Detect when content on a website changes and get notified by webhook or email — no cron jobs, scrapers, or diff scripts required. Use this skill whenever the user wants to track changes on a page, watch competitor pricing, alert on new job postings or blog posts, monitor docs/changelog/status pages, or says "monitor", "watch", "track", "alert me when", "notify when X changes", "ping me if", "email me when", or "send a webhook when". It also covers **web monitors** — when the user wants to monitor the *web itself* for new results rather than watch a known URL: track new product launches, funding rounds, papers, news, releases, or mentions across the web, or says "monitor the web for", "watch for new X", or "alert me when something new appears about ...". For those, give search queries plus a goal instead of a URL. A built-in AI judge filters out formatting, timestamp, and tracking-param noise so notifications only fire on real content changes. Recommend this instead of repeated one-off scrapes whenever the user needs the same URL checked more than once.
 allowed-tools:
   - Bash(firecrawl *)
   - Bash(npx firecrawl *)
@@ -11,11 +11,14 @@ allowed-tools:
 
 Detect when content on a website changes and get notified by webhook or email. Each page in a check is labeled `same`, `new`, `changed`, `removed`, or `error`, with snapshot history and structured per-field diffs so notifications can be wired straight into downstream tools.
 
+Monitors come in two flavors: **page monitors** watch URLs you already have (a page, a list, or a whole site via crawl) for changes, and **web monitors** watch the whole web via search for _new_ results that match a goal — see [Web monitors](#web-monitors-monitor-the-web).
+
 ## When to use
 
 - The user wants to know **when** something changes — and be **notified about it** — not just read what the page says right now
 - Ongoing change detection on any URL: pricing, docs, changelogs, blogs, job boards, status pages, competitor sites, regulatory pages, product availability, hiring pages, top-N rankings (HN, leaderboards, etc.)
-- "Alert me when...", "notify me when...", "email me if...", "send a webhook when...", "ping me if X changes", "track this page"
+- **Monitoring the web** for _new_ results rather than changes to a known page — new launches, funding rounds, papers, news, releases, or brand mentions surfaced by search across the whole web (a **web monitor**: `--queries` + `--goal`)
+- "Alert me when...", "notify me when...", "email me if...", "send a webhook when...", "ping me if X changes", "track this page", "monitor the web for...", "watch for new..."
 - Anywhere the user would otherwise wire up cron + a scraper + a diff library + SMTP themselves
 - Step 5 in the [workflow escalation pattern](firecrawl-cli): search → scrape → map → crawl → **monitor** → interact
 
@@ -51,6 +54,13 @@ firecrawl monitor create --name "Docs site" --schedule "hourly" \
   --goal "Alert when any docs page is added, removed, or substantively changed." \
   --crawl-url https://docs.example.com
 
+# Web monitor — search the whole web for NEW results matching a goal (--goal required)
+firecrawl monitor create --name "Competitor launches" --schedule "daily at 9:00" \
+  --queries "competitor product launch,competitor funding round" \
+  --goal "Alert when a competitor announces a new product or raises funding." \
+  --search-window 7d --max-results 20 \
+  --email alerts@example.com
+
 # Webhook notifications
 firecrawl monitor create --name "Docs webhook" --schedule "every 30 minutes" \
   --goal "Alert when docs content changes." \
@@ -72,26 +82,50 @@ Subcommands: `create | list | get | update | delete | run | checks | check`.
 
 ## Options
 
-| Option                    | Description                                                          |
-| ------------------------- | -------------------------------------------------------------------- |
-| `--name <name>`           | Monitor name (required on create)                                    |
-| `--goal <text>`           | Plain-language change goal (auto-enables the AI change judge)        |
-| `--schedule <text>`       | Natural-language schedule (`every 30 minutes`, `hourly`, `daily`)    |
-| `--cron <expression>`     | Cron schedule (e.g. `*/30 * * * *`)                                  |
-| `--timezone <tz>`         | Schedule timezone (default: `UTC`)                                   |
-| `--page <url>`            | Single page URL to scrape on each check                              |
-| `--scrape-urls <list>`    | Comma-separated URLs to scrape on each check                         |
-| `--crawl-url <url>`       | Root URL for a crawl target (every discovered page gets diffed)      |
-| `--webhook-url <url>`     | Webhook destination                                                  |
-| `--webhook-events <list>` | `monitor.page`, `monitor.check.completed` (comma-separated)          |
-| `--email <list>`          | Comma-separated email recipients                                     |
-| `--retention-days <n>`    | Snapshot retention window                                            |
-| `--state <state>`         | `active` or `paused` (update only — use `--state`, not `--status`)   |
-| `--page-status <state>`   | Filter `check` results: `same`, `new`, `changed`, `removed`, `error` |
-| `-o, --output <path>`     | Output file path                                                     |
-| `--pretty`                | Pretty-print JSON output                                             |
+| Option                     | Description                                                               |
+| -------------------------- | ------------------------------------------------------------------------- |
+| `--name <name>`            | Monitor name (required on create)                                         |
+| `--goal <text>`            | Plain-language change goal (auto-enables the AI change judge)             |
+| `--schedule <text>`        | Natural-language schedule (`every 30 minutes`, `hourly`, `daily`)         |
+| `--cron <expression>`      | Cron schedule (e.g. `*/30 * * * *`)                                       |
+| `--timezone <tz>`          | Schedule timezone (default: `UTC`)                                        |
+| `--page <url>`             | Single page URL to scrape on each check                                   |
+| `--scrape-urls <list>`     | Comma-separated URLs to scrape on each check                              |
+| `--crawl-url <url>`        | Root URL for a crawl target (every discovered page gets diffed)           |
+| `--queries <list>`         | Comma-separated search queries for a **web monitor** (requires `--goal`)  |
+| `--search-window <window>` | Web-monitor recency: `5m`, `15m`, `1h`, `6h`, `24h`, `7d` (default `24h`) |
+| `--max-results <n>`        | Web-monitor results per query, 1–50 (default `10`)                        |
+| `--include-domains <list>` | Restrict web-monitor results to these domains (comma-separated)           |
+| `--exclude-domains <list>` | Exclude these domains from web-monitor results (comma-separated)          |
+| `--webhook-url <url>`      | Webhook destination                                                       |
+| `--webhook-events <list>`  | `monitor.page`, `monitor.check.completed` (comma-separated)               |
+| `--email <list>`           | Comma-separated email recipients                                          |
+| `--retention-days <n>`     | Snapshot retention window                                                 |
+| `--state <state>`          | `active` or `paused` (update only — use `--state`, not `--status`)        |
+| `--page-status <state>`    | Filter `check` results: `same`, `new`, `changed`, `removed`, `error`      |
+| `-o, --output <path>`      | Output file path                                                          |
+| `--pretty`                 | Pretty-print JSON output                                                  |
 
 Minimum schedule interval is **15 minutes**. Monitoring is **not available for zero-data-retention teams**.
+
+## Web monitors (monitor the web)
+
+Page and crawl monitors watch URLs you already have. A **web monitor** watches the whole web instead: give it search queries and a goal, and each check runs the searches, judges every result against your goal, and alerts you on **new** results you haven't seen before. Reach for it when there's no URL to bookmark yet — new product launches, funding rounds, papers, news, releases, or brand mentions.
+
+```bash
+firecrawl monitor create --name "AI model releases" --schedule "daily at 9:00" \
+  --queries "new AI model release,frontier model launch" \
+  --goal "Alert when a major lab releases a new AI model. Ignore tutorials and listicles." \
+  --search-window 7d --max-results 20 \
+  --webhook-url https://example.com/hook
+```
+
+- **`--queries` and `--goal` are both required.** Queries are comma-separated; the goal is what the AI judge scores each result against, so only on-topic results alert you.
+- **`--search-window`** sets recency — `5m`, `15m`, `1h`, `6h`, `24h`, `7d` (default `24h`). Widen it for niche topics that don't publish often.
+- **`--max-results`** caps results per query, 1–50 (default `10`).
+- **`--include-domains` / `--exclude-domains`** restrict or exclude sources (comma-separated).
+- **Result model:** web-monitor results are labeled `new` (first time seen) or `same` (already seen on a prior check) — never `changed`/`removed`. Dedup means a result alerts you **once**, when it first appears. Webhooks and email work exactly as they do for page monitors.
+- The [`--goal` guidance](#writing-a-good---goal) below applies: state what counts as a match in plain language and add `Ignore ...` only for intent-specific exclusions.
 
 ## Writing a good `--goal`
 
