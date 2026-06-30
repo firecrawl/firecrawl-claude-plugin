@@ -138,6 +138,18 @@ firecrawl monitor create --name "AI model releases" --schedule "daily at 9:00" \
 - **Result model:** web-monitor results are labeled `new` (first time seen) or `same` (already seen on a prior check) — never `changed`/`removed`. Dedup means a result alerts you **once**, when it first appears. Webhooks and email work exactly as they do for page monitors.
 - The [`--goal` guidance](#writing-a-good---goal) below applies: state what counts as a match in plain language and add `Ignore ...` only for intent-specific exclusions.
 
+## Writing good `--queries` (web monitors)
+
+For a web monitor, **queries control recall** (what the search retrieves) and **the goal controls precision** (which results alert). Tune both — a perfect goal can't alert on a result the queries never pulled in, and broad queries with a vague goal produce constant low-value alerts.
+
+- Write **keywords, not sentences**: `OpenAI new model release`, not `tell me when OpenAI releases a new model`.
+- Quote multi-word entities (`"Llama 4"`); group synonyms with `OR` (`launch OR release OR announcement`).
+- Keep each query tight (~2–6 terms). One broad query usually beats several narrow ones — extra queries split the `--max-results` budget without adding coverage.
+- One query per **distinct** subject. Several facets of one subject = one query; only split for genuinely separate entities (e.g. "OpenAI, Anthropic, and Google").
+- No `site:` operators in queries — use `--include-domains` / `--exclude-domains`.
+
+**What good looks like:** a healthy web monitor mostly returns `new: 0` and alerts only on genuinely new, on-goal results. If most results come back `ignored`, the queries pull noise the goal rejects — tighten the queries. If a topic returns nothing for long stretches, the queries are too narrow or `--search-window` too tight — broaden them. If the user dismisses alerts, the goal is too broad — add an intent-specific `Ignore ...`. The aim is high precision with enough recall: every alert worth acting on, nothing real missed.
+
 ## Writing a good `--goal`
 
 The goal is what the AI change judge uses to decide whether a page is `changed` vs `same`. Convert the user's intent into a concise 2-3 sentence goal:
