@@ -28,22 +28,49 @@ firecrawl search "your query" --scrape -o .firecrawl/scraped.json --json
 
 # News from the past day
 firecrawl search "your query" --sources news --tbs qdr:d -o .firecrawl/news.json --json
+
+# Programming question: search GitHub issues, merged PRs, READMEs, and docs
+firecrawl search "your query" --categories developer -o .firecrawl/developer.json --json
 ```
+
+## Developer search
+
+`--categories developer` adds an index built for coding agents. It covers GitHub
+issues, merged pull requests, repository READMEs, and curated documentation
+sites. Use it for a programming question: an error message, an API contract, a
+library behaviour, or a known bug.
+
+The hits arrive in their own `data.developer` group beside `data.web`. Each hit
+holds `url`, `title`, and `description`, where `description` is the matched
+passage. Read the passages with
+`jq -r '.data.developer[] | .url, .description' .firecrawl/developer.json`.
+
+The dedicated `firecrawl developer` command searches only that index and keeps
+the full matched passages:
+
+```bash
+# Developer search only, with full passages
+firecrawl developer "your query" --limit 10 -o .firecrawl/developer.json --json
+```
+
+Each result holds `id`, `type` (`issue`, `pull_request`, `readme`, `doc`),
+`url`, `title`, and `passages`. Read them with
+`jq -r '.results[] | .url, .passages[].text' .firecrawl/developer.json`.
 
 ## Options
 
-| Option                               | Description                                   |
-| ------------------------------------ | --------------------------------------------- |
-| `--limit <n>`                        | Max number of results                         |
-| `--sources <web,images,news>`        | Source types to search                        |
-| `--categories <github,research,pdf>` | Filter by category                            |
-| `--tbs <qdr:h\|d\|w\|m\|y>`          | Time-based search filter                      |
-| `--location`                         | Location for search results                   |
-| `--country <code>`                   | Country code for search                       |
-| `--scrape`                           | Also scrape full page content for each result |
-| `--scrape-formats`                   | Formats when scraping (default: markdown)     |
-| `-o, --output <path>`                | Output file path                              |
-| `--json`                             | Output as JSON                                |
+| Option                                         | Description                                   |
+| ---------------------------------------------- | --------------------------------------------- |
+| `--limit <n>`                                  | Max number of results                         |
+| `--sources <web,images,news>`                  | Source types to search                        |
+| `--categories <github,research,pdf,developer>` | Filter by category                            |
+| `--tbs <qdr:h\|d\|w\|m\|y>`                    | Time-based search filter                      |
+| `--location`                                   | Location for search results                   |
+| `--country <code>`                             | Country code for search                       |
+| `--scrape`                                     | Also scrape full page content for each result |
+| `--scrape-formats`                             | Formats when scraping (default: markdown)     |
+| `-o, --output <path>`                          | Output file path                              |
+| `--json`                                       | Output as JSON                                |
 
 ## Tips
 
