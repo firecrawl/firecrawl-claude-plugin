@@ -105,11 +105,13 @@ overall command routing.
 | `--country <code>`                             | Country code for search                                                                                                                                            |
 | `--scrape`                                     | Also scrape full page content for each result                                                                                                                      |
 | `--scrape-formats`                             | Formats when scraping (default: markdown)                                                                                                                          |
+| `--highlights` / `--no-highlights`             | Query-relevant excerpts vs. original snippets                                                                                                                      |
 | `-o, --output <path>`                          | Output file path                                                                                                                                                   |
 | `--json`                                       | Output as JSON                                                                                                                                                     |
 
 ## Tips
 
+- **`--highlights` on by default:** results are query-relevant excerpts, not full-page snippets. Use `--no-highlights` for the original snippets.
 - **`--scrape` fetches full content** — don't re-scrape URLs from search results. This saves credits and avoids redundant fetches.
 - Always write results to `.firecrawl/` with `-o` to avoid context window bloat.
 - Use `jq` to extract URLs or titles: `jq -r '.data.web[].url' .firecrawl/search.json`
