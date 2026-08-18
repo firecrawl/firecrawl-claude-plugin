@@ -4,12 +4,12 @@ description: |
   Efficiently extract and convert the contents of any local file—such as PDF, DOCX, DOC, ODT, RTF, XLSX, XLS, or HTML—into clean, well-formatted markdown saved to disk. Use this skill whenever the user requests to parse, read, or extract information from a file on their computer, including phrases like “parse this PDF”, “convert this document”, “read this file”, “extract text from”, or when a local file path (not a URL) is provided. This skill offers advanced options like generating AI-powered summaries and answering questions based on the file's content. Prefer this tool over `scrape` when handling local files to deliver precise, structured outputs for downstream tasks.
 allowed-tools:
   - Bash(firecrawl *)
-  - Bash(npx firecrawl *)
+  - Bash(npx firecrawl-cli *)
 ---
 
 # firecrawl parse
 
-Turn a local document into clean markdown on disk. Supports **PDF, DOCX, DOC, ODT, RTF, XLSX, XLS, HTML/HTM/XHTML**.
+Turn a local document into clean markdown on disk. Supports **PDF, DOCX, DOC, ODT, RTF, XLSX, XLS, HTML/HTM**.
 
 ## When to use
 
@@ -39,14 +39,14 @@ Then `head`, `grep`, `rg` etc., or incrementally read the file - don't load the 
 
 ## Options
 
-| Option                 | Description                             |
-| ---------------------- | --------------------------------------- |
-| `-S, --summary`        | AI-generated summary                    |
-| `-Q, --query <prompt>` | Ask a question about the parsed content |
-| `-o, --output <path>`  | Output file path — **always use this**  |
-| `-f, --format <fmt>`   | `markdown` (default), `html`, `summary` |
-| `--timeout <ms>`       | Timeout for the parse job               |
-| `--timing`             | Show request duration                   |
+| Option                   | Description                                                                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| `-S, --summary`          | AI-generated summary                                                                                                             |
+| `-Q, --query <prompt>`   | Ask a question about the parsed content                                                                                          |
+| `-o, --output <path>`    | Output file path — **always use this**                                                                                           |
+| `-f, --format <formats>` | Comma-separated: `markdown`, `html`, `rawHtml`, `links`, `images`, `summary`, `json`, `attributes`. Multiple formats output JSON |
+| `--timeout <ms>`         | Timeout for the parse job                                                                                                        |
+| `--timing`               | Show request duration                                                                                                            |
 
 ## Tips
 
@@ -54,7 +54,7 @@ Then `head`, `grep`, `rg` etc., or incrementally read the file - don't load the 
 - Max upload size: **50 MB** per file.
 - Credits: ~1 per PDF page; HTML is 1 flat.
 - Check `.firecrawl/` before re-parsing the same file.
-- To check your credit balance (recommended for batch processing and similar workflows), use the `firecrawl credit-usage` command.
+- To check your credit balance (recommended for batch processing and similar workflows), use `firecrawl credit-usage` (requires authentication).
 
 ## See also
 

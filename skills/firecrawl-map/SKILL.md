@@ -4,18 +4,20 @@ description: |
   Discover and list all URLs on a website, with optional search filtering. Use this skill when the user wants to find a specific page on a large site, list all URLs, see the site structure, find where something is on a domain, or says "map the site", "find the URL for", "what pages are on", or "list all pages". Essential when the user knows which site but not which exact page.
 allowed-tools:
   - Bash(firecrawl *)
-  - Bash(npx firecrawl *)
+  - Bash(npx firecrawl-cli *)
 ---
 
 # firecrawl map
 
 Discover URLs on a site. Use `--search` to find a specific page within a large site.
 
+**Prerequisite:** `map` requires authentication (no keyless free tier); without credentials the CLI prompts an interactive login.
+
 ## When to use
 
 - You need to find a specific subpage on a large site
 - You want a list of all URLs on a site before scraping or crawling
-- Step 3 in the [workflow escalation pattern](firecrawl-cli): search → scrape → **map** → crawl → interact
+- Step 3 in the [workflow escalation pattern](../firecrawl/SKILL.md): search → scrape → **map** + scrape → crawl → monitor → interact
 
 ## Quick start
 

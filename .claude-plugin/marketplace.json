@@ -10,7 +10,7 @@
       "description": "Scrape, search, crawl, and map the web with a single command.",
       "skills": [
         "./skills/firecrawl-agent",
-        "./skills/firecrawl-cli",
+        "./skills/firecrawl",
         "./skills/firecrawl-crawl",
         "./skills/firecrawl-download",
         "./skills/firecrawl-interact",
