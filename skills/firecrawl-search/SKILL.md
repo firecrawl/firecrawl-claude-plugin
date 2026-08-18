@@ -4,7 +4,7 @@ description: |
   Web search with full page content extraction, plus routing to Firecrawl's research paper index. Use this skill whenever the user asks to search the web, find articles, research a topic, look something up, find recent news, discover sources, or says "search for", "find me", "look up", "what are people saying about", or "find articles about". Also use it for scientific literature — finding papers, studies, trials, or preprints on PubMed, bioRxiv, medRxiv, or arXiv. Returns real search results with optional full-page markdown — not just snippets. Provides capabilities beyond Claude's built-in WebSearch.
 allowed-tools:
   - Bash(firecrawl *)
-  - Bash(npx firecrawl *)
+  - Bash(npx firecrawl-cli *)
 ---
 
 # firecrawl search
@@ -16,7 +16,7 @@ Web search with optional content scraping. Returns search results as JSON, optio
 - You don't have a specific URL yet
 - You need to find pages, answer questions, or discover sources
 - You need research papers — see [Paper search](#paper-search), which routes to `firecrawl research`, not to `search --categories research`
-- First step in the [workflow escalation pattern](firecrawl-cli): search → scrape → map → crawl → interact
+- First step in the [workflow escalation pattern](../firecrawl/SKILL.md): search → scrape → map + scrape → crawl → monitor → interact
 
 ## Quick start
 
@@ -90,7 +90,7 @@ Paper ids accept `pmid:`, `pmcid:`, `doi:`, and `arxiv:` forms. `inspect-paper`
 returns canonical metadata for one id. Read hits with
 `jq -r '.results[] | .primaryId, .title' .firecrawl/papers.json`.
 
-See [firecrawl-cli](../firecrawl-cli/SKILL.md) for how paper search fits the
+See [firecrawl](../firecrawl/SKILL.md) for how paper search fits the
 overall command routing.
 
 ## Options
@@ -135,42 +135,19 @@ Search costs 2 credits. After you've actually used the results (or decided they 
 - **Idempotent:** re-submitting for the same search id returns success but no extra refund.
 - **`--silent &`** is the right pattern — exit code 0 even on failure, so a rejected/expired call never crashes your pipeline.
 
-Read the search response's `id`:
+Verify the search returned results before reading its `id`. Zero-result searches write no output file, so the file may be missing — or left over from an earlier search. The guard below skips feedback when the file is missing or has zero results; call `search-feedback` only inside it:
 
 ```bash
-SEARCH_ID=$(jq -r '.id' .firecrawl/search-react-hooks.json)
-```
-
-Then send feedback. Pick the rating that matches what actually happened:
-
-```bash
-# Results were useful, with notes on what was still missing
-firecrawl search-feedback "$SEARCH_ID" \
-  --rating good \
-  --valuable-sources '[{"url":"https://react.dev/reference/react/hooks","reason":"Most authoritative"}]' \
-  --missing-content '[
-    {"topic":"useDeferredValue","description":"No example of useDeferredValue with Suspense"},
-    {"topic":"useTransition","description":"No coverage of useTransition for routing"}
-  ]' \
-  --query-suggestions "Boost react.dev for queries about react hooks" \
-  --silent &
-
-# Results were partially useful — multiple missing topics, one entry per topic
-firecrawl search-feedback "$SEARCH_ID" \
-  --rating partial \
-  --missing-content '[
-    {"topic":"useDeferredValue"},
-    {"topic":"useTransition","description":"Need React 18+ examples"},
-    {"topic":"Server Components hooks"}
-  ]' \
-  --silent &
-
-# Quick form — repeat --missing-content or use comma-separated topics
-firecrawl search-feedback "$SEARCH_ID" \
-  --rating bad \
-  --missing-content "official api reference: missing v2 endpoints" \
-  --missing-content "code examples in python" \
-  --silent &
+# Send once per search. Rate honestly and replace the placeholder with the
+# rating that matches what actually happened. The two fields shown
+# satisfy the substantive-content rule for every rating.
+if SEARCH_ID=$(jq -er 'select(any(.data[]; length > 0)) | .id' .firecrawl/search-react-hooks.json); then
+  firecrawl search-feedback "$SEARCH_ID" \
+    --rating "<good|partial|bad>" \
+    --valuable-sources '[{"url":"https://react.dev/reference/react/hooks","reason":"Most authoritative"}]' \
+    --missing-content '[{"topic":"useDeferredValue","description":"No example of useDeferredValue with Suspense"}]' \
+    --silent &
+fi
 ```
 
 **`--missing-content` accepts:**

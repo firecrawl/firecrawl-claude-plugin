@@ -4,18 +4,20 @@ description: |
   Bulk extract content from an entire website or site section. Use this skill when the user wants to crawl a site, extract all pages from a docs section, bulk-scrape multiple pages following links, or says "crawl", "get all the pages", "extract everything under /docs", "bulk extract", or needs content from many pages on the same site. Handles depth limits, path filtering, and concurrent extraction.
 allowed-tools:
   - Bash(firecrawl *)
-  - Bash(npx firecrawl *)
+  - Bash(npx firecrawl-cli *)
 ---
 
 # firecrawl crawl
 
 Bulk extract content from a website. Crawls pages following links up to a depth/limit.
 
+**Prerequisite:** `crawl` requires authentication (no keyless free tier); without credentials the CLI prompts an interactive login.
+
 ## When to use
 
 - You need content from many pages on a site (e.g., all `/docs/`)
 - You want to extract an entire site section
-- Step 4 in the [workflow escalation pattern](firecrawl-cli): search → scrape → map → **crawl** → interact
+- Step 4 in the [workflow escalation pattern](../firecrawl/SKILL.md): search → scrape → map + scrape → **crawl** → monitor → interact
 
 ## Quick start
 
@@ -47,9 +49,9 @@ firecrawl crawl <job-id>
 
 ## Tips
 
-- Always use `--wait` when you need the results immediately. Without it, crawl returns a job ID for async polling.
+- Always use `--wait` when you need the results immediately. It has no default timeout; use `--timeout <seconds>` to bound polling. Without `--wait`, crawl returns a job ID for async polling.
 - Use `--include-paths` to scope the crawl — don't crawl an entire site when you only need one section.
-- Crawl consumes credits per page. Check `firecrawl credit-usage` before large crawls.
+- Crawl consumes credits per page. Check `firecrawl credit-usage` before large crawls (`credit-usage` requires authentication).
 
 ## See also
 

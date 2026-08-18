@@ -4,7 +4,7 @@ description: |
   Search, scrape, and interact with the web via the Firecrawl CLI. Use this skill whenever the user wants to search the web, find articles, research a topic, look something up online, scrape a webpage, grab content from a URL, get data from a website, crawl documentation, download a site, or interact with pages that need clicks or logins. Also use when they say "fetch this page", "pull the content from", "get the page at https://", or reference external websites. This provides real-time web search with full page content and interact capabilities — beyond what Claude can do natively with built-in tools. Do NOT trigger for local file operations, git commands, deployments, or code editing tasks.
 allowed-tools:
   - Bash(firecrawl *)
-  - Bash(npx firecrawl *)
+  - Bash(npx firecrawl-cli *)
 ---
 
 # Firecrawl CLI
@@ -20,7 +20,7 @@ If the task is to integrate Firecrawl into an application, add `FIRECRAWL_API_KE
 Must be installed. Check with `firecrawl --status`.
 
 ```
-  🔥 firecrawl cli v1.8.0
+  🔥 firecrawl cli
 
   ● Authenticated via FIRECRAWL_API_KEY
   Concurrency: 0/100 jobs (parallel scrape limit)
@@ -65,7 +65,7 @@ Follow this escalation pattern:
 | Bulk extract a site section | `crawl`               | Need many pages (e.g., all /docs/)                                      |
 | AI-powered data extraction  | `agent`               | Need structured data from complex sites                                 |
 | Interact with a page        | `scrape` + `interact` | Content requires clicks, form fills, pagination, or login               |
-| Download a site to files    | `download`            | Save an entire site as local files                                      |
+| Download a site to files    | `x download`          | Save an entire site as local files                                      |
 | Parse a local file          | `parse`               | File on disk (PDF, DOCX, XLSX, etc.) — not a URL                        |
 | Watch pages for changes     | `monitor`             | Schedule recurring scrapes/crawls, diff against snapshots               |
 
@@ -135,7 +135,7 @@ firecrawl monitor update <monitorId> --state paused
 firecrawl monitor delete <monitorId>
 ```
 
-Schedules accept cron (`--cron "*/5 * * * *"`) or natural language (`--schedule "every 5 minutes"`). Minimum interval is 5 minutes. Targets are `--page <url>` for one page, `--scrape-urls a,b,c` for multiple scrape URLs, or `--crawl-url <url>` for a whole-site crawl each check. Use `--goal` for flag-based monitor creation, or include `"goal": "..."` in JSON payloads. Note: `--state` (not `--status`) sets active/paused; `--page-status` (not `--status`) filters page results on `check` — avoids collision with the global `--status` flag. Monitoring is not available for zero-data-retention teams.
+Schedules accept cron (`--cron "*/5 * * * *"`) or natural language (`--schedule "every 5 minutes"`). Minimum interval is 5 minutes. Targets are `--page <url>` for one page, `--scrape-urls a,b,c` for multiple scrape URLs, `--crawl-url <url>` for a whole-site crawl each check, or `--queries <q,...>` plus required `--goal` for web-search monitors; tune web search with `--search-window` and `--max-results`. Use `--goal` for flag-based monitor creation, or include `"goal": "..."` in JSON payloads. Note: `--state` (not `--status`) sets active/paused; `--page-status` (not `--status`) filters page results on `check` — avoids collision with the global `--status` flag. Monitoring is not available for zero-data-retention teams.
 
 **JSON-mode change tracking:** By default monitors diff each page's markdown and you get a unified text diff back. When you care about **specific structured fields** (price, headline, in-stock flag, items in a list) instead of the whole page, add a `changeTracking` format with `modes: ["json"]` and a JSON schema to the target's `scrapeOptions.formats`. The flag-based form doesn't cover this — pass a JSON body via file or stdin:
 
@@ -269,14 +269,18 @@ jq -r '.data.web[] | "\(.title): \(.url)"' .firecrawl/search.json
 Search costs 2 credits per call. **After you finish using a search result**, send structured feedback in the background. The first feedback per search id refunds 1 credit and feeds search-quality improvements.
 
 ```bash
-SEARCH_ID=$(jq -r '.id' .firecrawl/search-react-hooks.json)
-
-firecrawl search-feedback "$SEARCH_ID" \
-  --rating good \
-  --valuable-sources '[{"url":"https://react.dev/reference/react/hooks","reason":"Authoritative"}]' \
-  --missing-content '[{"topic":"useDeferredValue example"},{"topic":"Server Components hooks"}]' \
-  --query-suggestions "Boost react.dev for react-hooks queries" \
-  --silent &
+# Guard: zero-result searches write no output file, so verify before reading the id.
+# A failed guard (missing file or zero results) skips the feedback call entirely.
+# Rate honestly — replace the placeholder with the rating that matches
+# what actually happened: good | partial | bad. The two fields shown
+# satisfy the substantive-content rule for every rating.
+if SEARCH_ID=$(jq -er 'select(any(.data[]; length > 0)) | .id' .firecrawl/search-react-hooks.json); then
+  firecrawl search-feedback "$SEARCH_ID" \
+    --rating "<good|partial|bad>" \
+    --valuable-sources '[{"url":"https://react.dev/reference/react/hooks","reason":"Authoritative"}]' \
+    --missing-content '[{"topic":"useDeferredValue example"},{"topic":"Server Components hooks"}]' \
+    --silent &
+fi
 ```
 
 The most useful field is `--missing-content`: an _array_ of specific pieces of content you expected to find but didn't. Use one entry per missing topic. Bad/partial feedback with detailed `--missing-content` is just as valuable as good feedback.
@@ -316,6 +320,8 @@ wait
 For interact, scrape multiple pages and interact with each independently using their scrape IDs.
 
 ## Credit Usage
+
+Requires authentication (no keyless free tier); without credentials the CLI prompts an interactive login.
 
 ```bash
 firecrawl credit-usage

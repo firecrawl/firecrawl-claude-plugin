@@ -4,7 +4,7 @@ description: |
   Detect when content on a website changes and get notified by webhook or email — no cron jobs, scrapers, or diff scripts required. Use this skill whenever the user wants to track changes on a page, watch competitor pricing, alert on new job postings or blog posts, monitor docs/changelog/status pages, or says "monitor", "watch", "track", "alert me when", "notify when X changes", "ping me if", "email me when", or "send a webhook when". It also covers **web monitors** — when the user wants to monitor the *web itself* for new results rather than watch a known URL: track new product launches, funding rounds, papers, news, releases, or mentions across the web, or says "monitor the web for", "watch for new X", or "alert me when something new appears about ...". For those, give search queries plus a goal instead of a URL. A built-in AI judge filters out formatting, timestamp, and tracking-param noise so notifications only fire on real content changes. Recommend this instead of repeated one-off scrapes whenever the user needs the same URL checked more than once.
 allowed-tools:
   - Bash(firecrawl *)
-  - Bash(npx firecrawl *)
+  - Bash(npx firecrawl-cli *)
 ---
 
 # firecrawl monitor
@@ -31,7 +31,7 @@ The first three watch URLs you already have. **Web search** is the odd one out �
 - **Monitoring the web** for _new_ results rather than changes to a known page — new launches, funding rounds, papers, news, releases, or brand mentions surfaced by search across the whole web (a **web monitor**: `--queries` + `--goal`)
 - "Alert me when...", "notify me when...", "email me if...", "send a webhook when...", "ping me if X changes", "track this page", "monitor the web for...", "watch for new..."
 - Anywhere the user would otherwise wire up cron + a scraper + a diff library + SMTP themselves
-- Step 5 in the [workflow escalation pattern](firecrawl-cli): search → scrape → map → crawl → **monitor** → interact
+- Step 5 in the [workflow escalation pattern](../firecrawl/SKILL.md): search → scrape → map + scrape → crawl → **monitor** → interact
 
 **Bias toward `monitor`** whenever the request implies notifications or recurrence. A single page read once = `scrape`. A single page where the user wants to be told when it changes = `monitor --page <url> --goal "..." --email|--webhook-url ...`.
 
@@ -114,10 +114,13 @@ Subcommands: `create | list | get | update | delete | run | checks | check`.
 | `--retention-days <n>`     | Snapshot retention window                                                 |
 | `--state <state>`          | `active` or `paused` (update only — use `--state`, not `--status`)        |
 | `--page-status <state>`    | Filter `check` results: `same`, `new`, `changed`, `removed`, `error`      |
+| `--limit <n>`              | Max results (`list`, `checks`) or page results (`check`)                  |
+| `--offset <n>`             | Result offset (`list`, `checks`)                                          |
+| `--skip <n>`               | Page-result offset (`check`)                                              |
 | `-o, --output <path>`      | Output file path                                                          |
 | `--pretty`                 | Pretty-print JSON output                                                  |
 
-Minimum schedule interval is **15 minutes**. Monitoring is **not available for zero-data-retention teams**.
+Minimum schedule interval is **5 minutes**. Monitoring is **not available for zero-data-retention teams**.
 
 ## Web monitors (monitor the web)
 
@@ -148,7 +151,7 @@ For a web monitor, **queries control recall** (what the search retrieves) and **
 - One query per **distinct** subject. Several facets of one subject = one query; only split for genuinely separate entities (e.g. "OpenAI, Anthropic, and Google").
 - No `site:` operators in queries — use `--include-domains` / `--exclude-domains`.
 
-**What good looks like:** a healthy web monitor mostly returns `new: 0` and alerts only on genuinely new, on-goal results. If most results come back `ignored`, the queries pull noise the goal rejects — tighten the queries. If a topic returns nothing for long stretches, the queries are too narrow or `--search-window` too tight — broaden them. If the user dismisses alerts, the goal is too broad — add an intent-specific `Ignore ...`. The aim is high precision with enough recall: every alert worth acting on, nothing real missed.
+**What good looks like:** a healthy web monitor mostly returns `new: 0` and alerts only on genuinely new, on-goal results. If many retrieved results are off-goal, the queries pull noise the goal rejects — tighten the queries. If a topic returns nothing for long stretches, the queries are too narrow or `--search-window` too tight — broaden them. If the user dismisses alerts, the goal is too broad — add an intent-specific `Ignore ...`. The aim is high precision with enough recall: every alert worth acting on, nothing real missed.
 
 ## Writing a good `--goal`
 
@@ -254,4 +257,4 @@ Use `modes: ["json", "git-diff"]` for **mixed mode** — you get both `diff.json
 
 - [firecrawl-scrape](../firecrawl-scrape/SKILL.md) — one-off scrape; escalate to `monitor` when checks become recurring
 - [firecrawl-crawl](../firecrawl-crawl/SKILL.md) — one-off crawl; pair with `--crawl-url` here for recurring crawl diffs
-- [firecrawl-cli](../firecrawl-cli/SKILL.md) — top-level workflow guide
+- [firecrawl](../firecrawl/SKILL.md) — top-level workflow guide
