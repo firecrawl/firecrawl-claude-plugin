@@ -1,7 +1,7 @@
 ---
 name: firecrawl-download
 description: |
-  Download an entire website as local files — markdown, screenshots, or multiple formats per page. Use this skill when the user wants to save a site locally, download documentation for offline use, bulk-save pages as files, or says "download the site", "save as local files", "offline copy", "download all the docs", or "save for reference". Combines site mapping and scraping into organized local directories.
+  Save a site or section as local files (markdown, screenshots). Use for "download the site", offline docs, or a local copy for reference.
 allowed-tools:
   - Bash(firecrawl *)
   - Bash(npx firecrawl-cli *)
@@ -13,20 +13,11 @@ allowed-tools:
 
 **Prerequisite:** `download` requires authentication (no keyless free tier); without credentials the CLI prompts an interactive login.
 
-Maps the site origin first to discover pages, then scrapes each one into nested directories under `.firecrawl/`. Use `--include-paths` to scope a non-root URL to one section. Supported scrape options are listed below. Always pass `-y` to skip the confirmation prompt.
-
-## When to use
-
-- You want to save an entire site (or section) to local files
-- You need offline access to documentation or content
-- Bulk content extraction with organized file structure
+Maps the site origin first to discover pages, then scrapes each one into nested directories under `.firecrawl/`. Use `--include-paths` to scope a non-root URL to one section. Automated runs always pass `-y` — without it the command opens an interactive wizard that blocks on a prompt.
 
 ## Quick start
 
 ```bash
-# Interactive wizard (humans at a TTY only — agents must pass -y or the command blocks on a prompt)
-firecrawl x download https://docs.example.com
-
 # With screenshots
 firecrawl x download https://docs.example.com --screenshot --limit 20 -y
 
@@ -39,32 +30,11 @@ firecrawl x download https://docs.example.com --include-paths "/features,/sdks" 
 
 # Skip translations
 firecrawl x download https://docs.example.com --exclude-paths "/zh,/ja,/fr,/es,/pt-BR" -y
-
-# Full combo
-firecrawl x download https://docs.example.com \
-  --include-paths "/features,/sdks" \
-  --exclude-paths "/zh,/ja" \
-  --only-main-content \
-  --screenshot \
-  -y
 ```
 
-## Download options
+Run `firecrawl x download --help` for the full option list, including which scrape options download supports.
 
-| Option                    | Description                                              |
-| ------------------------- | -------------------------------------------------------- |
-| `--limit <n>`             | Max pages to download                                    |
-| `--search <query>`        | Filter URLs by search query                              |
-| `--include-paths <paths>` | Only download matching paths                             |
-| `--exclude-paths <paths>` | Skip matching paths                                      |
-| `--allow-subdomains`      | Include subdomain pages                                  |
-| `-y`                      | Skip confirmation prompt (always use in automated flows) |
-
-## Supported scrape options
-
-Only the options listed below are supported:
-
-`-f <formats>`, `-H`, `-S`, `--lockdown`, `--screenshot`, `--full-page-screenshot`, `--only-main-content`, `--include-tags`, `--exclude-tags`, `--wait-for`, `--max-age`, `--country`, `--languages`
+**Done when:** the command exits successfully and the expected files exist under `.firecrawl/`.
 
 ## See also
 

@@ -1,7 +1,7 @@
 ---
 name: firecrawl-crawl
 description: |
-  Bulk extract content from an entire website or site section. Use this skill when the user wants to crawl a site, extract all pages from a docs section, bulk-scrape multiple pages following links, or says "crawl", "get all the pages", "extract everything under /docs", "bulk extract", or needs content from many pages on the same site. Handles depth limits, path filtering, and concurrent extraction.
+  Bulk-extract many pages from one site or section. Use for "crawl", "everything under /docs", or content spanning linked pages.
 allowed-tools:
   - Bash(firecrawl *)
   - Bash(npx firecrawl-cli *)
@@ -12,12 +12,6 @@ allowed-tools:
 Bulk extract content from a website. Crawls pages following links up to a depth/limit.
 
 **Prerequisite:** `crawl` requires authentication (no keyless free tier); without credentials the CLI prompts an interactive login.
-
-## When to use
-
-- You need content from many pages on a site (e.g., all `/docs/`)
-- You want to extract an entire site section
-- Step 4 in the [workflow escalation pattern](../firecrawl/SKILL.md): search → scrape → map + scrape → **crawl** → monitor → interact
 
 ## Quick start
 
@@ -32,25 +26,14 @@ firecrawl crawl "<url>" --max-depth 3 --wait --progress -o .firecrawl/crawl.json
 firecrawl crawl <job-id>
 ```
 
-## Options
+Run `firecrawl crawl --help` for the full option list.
 
-| Option                    | Description                                 |
-| ------------------------- | ------------------------------------------- |
-| `--wait`                  | Wait for crawl to complete before returning |
-| `--progress`              | Show progress while waiting                 |
-| `--limit <n>`             | Max pages to crawl                          |
-| `--max-depth <n>`         | Max link depth to follow                    |
-| `--include-paths <paths>` | Only crawl URLs matching these paths        |
-| `--exclude-paths <paths>` | Skip URLs matching these paths              |
-| `--delay <ms>`            | Delay between requests                      |
-| `--max-concurrency <n>`   | Max parallel crawl workers                  |
-| `--pretty`                | Pretty print JSON output                    |
-| `-o, --output <path>`     | Output file path                            |
+**Done when:** the crawl reaches a terminal status and the saved output under `.firecrawl/` contains the expected pages.
 
 ## Tips
 
-- Always use `--wait` when you need the results immediately. It has no default timeout; use `--timeout <seconds>` to bound polling. Without `--wait`, crawl returns a job ID for async polling.
-- Use `--include-paths` to scope the crawl — don't crawl an entire site when you only need one section.
+- Use `--wait` when you need the results immediately. It has no default timeout; use `--timeout <seconds>` to bound polling. Without `--wait`, crawl returns a job ID for async polling.
+- **Scope crawls with `--include-paths`** whenever the request names a section — crawl only the pages you need.
 - Crawl consumes credits per page. Check `firecrawl credit-usage` before large crawls (`credit-usage` requires authentication).
 
 ## See also

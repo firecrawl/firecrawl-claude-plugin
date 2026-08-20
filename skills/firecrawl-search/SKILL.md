@@ -1,7 +1,7 @@
 ---
 name: firecrawl-search
 description: |
-  Web search with full page content extraction, plus routing to Firecrawl's research paper index. Use this skill whenever the user asks to search the web, find articles, research a topic, look something up, find recent news, discover sources, or says "search for", "find me", "look up", "what are people saying about", or "find articles about". Also use it for scientific literature — finding papers, studies, trials, or preprints on PubMed, bioRxiv, medRxiv, or arXiv. Returns real search results with optional full-page markdown — not just snippets. Provides capabilities beyond Claude's built-in WebSearch.
+  Web search with full page content, plus a research-paper index (PubMed, arXiv, bioRxiv, medRxiv). Use when no URL is known: finding sources, articles, news, or scientific literature.
 allowed-tools:
   - Bash(firecrawl *)
   - Bash(npx firecrawl-cli *)
@@ -9,14 +9,7 @@ allowed-tools:
 
 # firecrawl search
 
-Web search with optional content scraping. Returns search results as JSON, optionally with full page content.
-
-## When to use
-
-- You don't have a specific URL yet
-- You need to find pages, answer questions, or discover sources
-- You need research papers — see [Paper search](#paper-search), which routes to `firecrawl research`, not to `search --categories research`
-- First step in the [workflow escalation pattern](../firecrawl/SKILL.md): search → scrape → map + scrape → crawl → monitor → interact
+Web search with optional content scraping. Returns search results as JSON, optionally with full page content. For research papers, route to [Paper search](#paper-search) (`firecrawl research`).
 
 ## Quick start
 
@@ -33,9 +26,13 @@ firecrawl search "your query" --sources news --tbs qdr:d -o .firecrawl/news.json
 # Programming question: search GitHub issues, merged PRs, READMEs, and docs
 firecrawl search "your query" --categories developer -o .firecrawl/developer.json --json
 
-# Research papers: use the paper index, NOT `search --categories research`
+# Research papers: use the paper index (`research`, not `search --categories research`)
 firecrawl research search-papers "your query" -o .firecrawl/papers.json --json
 ```
+
+Run `firecrawl search --help` for the full option list.
+
+**Done when:** results are saved under `.firecrawl/`, verified non-empty, processed for the request, and one feedback event is sent within the time window (unless opted out).
 
 ## Developer search
 
@@ -63,13 +60,13 @@ Each result holds `id`, `type` (`issue`, `pull_request`, `readme`, `doc`),
 
 ## Paper search
 
-**`--categories research` is not the paper index.** It only narrows ordinary web
-results to research-affiliated websites (a short domain allowlist). For actual
-papers use the `firecrawl research` command group, which searches roughly 43M
-abstracts, around 90% biomedical (PubMed, bioRxiv, medRxiv) plus arXiv.
+For actual papers use the `firecrawl research` command group, which searches
+roughly 43M abstracts, around 90% biomedical (PubMed, bioRxiv, medRxiv) plus
+arXiv. (`search --categories research` is a website filter — it only narrows
+ordinary web results to research-affiliated sites.)
 
-Reach for it on any biomedical, clinical, or scientific-literature question
-instead of web-searching or scraping PubMed, bioRxiv, medRxiv, or Google
+Reach for it on any biomedical, clinical, or scientific-literature question —
+it replaces web-searching or scraping PubMed, bioRxiv, medRxiv, or Google
 Scholar by hand:
 
 ```bash
@@ -93,26 +90,10 @@ returns canonical metadata for one id. Read hits with
 See [firecrawl](../firecrawl/SKILL.md) for how paper search fits the
 overall command routing.
 
-## Options
-
-| Option                                         | Description                                                                                                                                                        |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `--limit <n>`                                  | Max number of results                                                                                                                                              |
-| `--sources <web,images,news>`                  | Source types to search                                                                                                                                             |
-| `--categories <github,research,pdf,developer>` | Filter by category. `research` = research-affiliated websites (see [Paper search](#paper-search) for the actual paper index); `developer` = the coding-agent index |
-| `--tbs <qdr:h\|d\|w\|m\|y>`                    | Time-based search filter                                                                                                                                           |
-| `--location`                                   | Location for search results                                                                                                                                        |
-| `--country <code>`                             | Country code for search                                                                                                                                            |
-| `--scrape`                                     | Also scrape full page content for each result                                                                                                                      |
-| `--scrape-formats`                             | Formats when scraping (default: markdown)                                                                                                                          |
-| `--highlights` / `--no-highlights`             | Query-relevant excerpts vs. original snippets                                                                                                                      |
-| `-o, --output <path>`                          | Output file path                                                                                                                                                   |
-| `--json`                                       | Output as JSON                                                                                                                                                     |
-
 ## Tips
 
 - **`--highlights` on by default:** results are query-relevant excerpts, not full-page snippets. Use `--no-highlights` for the original snippets.
-- **`--scrape` fetches full content** — don't re-scrape URLs from search results. This saves credits and avoids redundant fetches.
+- **`--scrape` fetches full content** — reuse that content instead of re-scraping result URLs. This saves credits and avoids redundant fetches.
 - Always write results to `.firecrawl/` with `-o` to avoid context window bloat.
 - Use `jq` to extract URLs or titles: `jq -r '.data.web[].url' .firecrawl/search.json`
 - Naming convention: `.firecrawl/search-{query}.json` or `.firecrawl/search-{query}-scraped.json`
@@ -126,7 +107,7 @@ Search costs 2 credits. After you've actually used the results (or decided they 
 **Rules to know before you call this:**
 
 - **Time window:** must be sent within ~2 minutes of the search. Late feedback is rejected.
-- **`--missing-content` is the most important field.** It's a list of _specific pieces_ of content you expected but did not find. One topic per entry — do not pack multiple topics into one string. These aggregate across teams and tell us what to index next.
+- **`--missing-content` is the most important field.** It's a list of _specific pieces_ of content you expected but did not find. One topic per entry, each in its own string. These aggregate across teams and tell us what to index next.
 - **Substantive content required** (zero-effort feedback is rejected with HTTP 400):
   - `good` → must include at least one `--valuable-sources` entry.
   - `partial` → must include `--valuable-sources` or `--missing-content`.
