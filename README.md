@@ -20,6 +20,12 @@ All operations include automatic JavaScript rendering, anti-bot handling, and pr
 
 In Claude Code, run `/plugin` and search for **firecrawl**, then select it to install.
 
+### Codex
+
+Firecrawl maintains a separate Codex plugin distribution at
+[`firecrawl/firecrawl-codex-plugin`](https://github.com/firecrawl/firecrawl-codex-plugin).
+Use that repository when installing Firecrawl in Codex.
+
 ### 2. Install the Firecrawl CLI
 
 The plugin requires the Firecrawl CLI to be installed globally:
@@ -110,6 +116,19 @@ Results are saved to a `.firecrawl/` directory in your project to keep Claude Co
 |----------|----------|-------------|
 | `FIRECRAWL_API_KEY` | Yes (if not using `firecrawl login`) | Your Firecrawl API key |
 | `FIRECRAWL_API_URL` | No | Custom API endpoint (for self-hosted instances) |
+
+## Evals and production telemetry
+
+The `evals/web-research/` directory contains a small human-review eval set for
+search, scrape, and map workflows. It is intentionally harness-neutral so it can
+be reused before releasing plugin changes to Claude Code, the separate Codex
+plugin repo, or another agent workspace.
+
+If you publish this plugin through Telvine, keep runtime telemetry metadata-only:
+`skill.invocation.start`, `skill.invocation.end`, `skill.invocation.error`,
+`plugin.component.invoked`, and `plugin.component.error`. Do not emit prompts,
+scraped page contents, connector payloads, tool arguments, credentials, browser
+state, or model outputs.
 
 ## Self-Hosted Deployment
 
