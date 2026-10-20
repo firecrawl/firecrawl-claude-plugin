@@ -1,6 +1,6 @@
 ---
 name: firecrawl-research-index
-description: Find scientific papers, follow citations, and verify claims against paper passages. Use for literature questions, related work, citing papers, references, or a question about a particular scientific paper.
+description: "Find scientific papers, follow citations, and verify claims against paper passages. Use for literature questions, related work, citing papers, references, or questions about a named paper."
 ---
 
 # Paper research

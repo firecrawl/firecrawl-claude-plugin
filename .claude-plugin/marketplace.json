@@ -1,6 +1,6 @@
 {
   "name": "firecrawl",
-  "description": "Firecrawl's hosted search and retrieval MCP plugin for Claude Code.",
+  "description": "Firecrawl, the context API for AI agents, as a hosted search MCP plugin for Claude Code.",
   "owner": {
     "name": "Firecrawl"
   },
@@ -8,12 +8,22 @@
     {
       "name": "firecrawl",
       "source": "./",
-      "version": "2.0.0",
-      "description": "Search the web, developer sources, and scientific papers with Firecrawl.",
+      "version": "2.1.1",
+      "description": "Firecrawl, the context API for AI agents: search the web, developer sources, government publications, and scientific papers, read the pages your searches find, and look up structured data from Alexandria providers.",
       "skills": [
+        "./skills/brand-identity",
+        "./skills/business-contact-research",
+        "./skills/design",
+        "./skills/enrich-lead",
+        "./skills/fantasy-sports",
+        "./skills/find-leads",
         "./skills/firecrawl",
+        "./skills/firecrawl-deep-research",
         "./skills/firecrawl-developer-index",
-        "./skills/firecrawl-research-index"
+        "./skills/firecrawl-research-index",
+        "./skills/job-postings",
+        "./skills/read-docs",
+        "./skills/seo-audit"
       ]
     }
   ]

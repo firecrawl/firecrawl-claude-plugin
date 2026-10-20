@@ -1,9 +1,15 @@
 ---
 name: firecrawl-developer-index
-description: Find documentation and repository evidence for library behavior, API contracts, error messages, and known bugs. Use when a programming question needs current public documentation, issues, pull requests, or implementation examples.
+description: "Investigate library/API implementation, bugs, and version discrepancies using public repository code, issues, and pull requests. Use when official documentation alone is insufficient."
 ---
 
 # Developer research
+
+Use this workflow when the question requires repository code, issue discussions
+or pull requests, rather than an answer from official documentation alone. Use
+`read-docs` for documented setup, usage, migrations and compatibility. A supplied
+issue or repository can be investigated directly; a documentation search is not
+a prerequisite.
 
 Use `firecrawl_developer_search` through the Firecrawl MCP connection. If it is
 deferred, discover it with the host's tool search. Include the library, version,
