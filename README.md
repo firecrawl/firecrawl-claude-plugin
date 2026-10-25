@@ -1,15 +1,21 @@
-# Firecrawl for Claude Code
+# Firecrawl for Claude
 
-Search the web, read source pages, retrieve structured data, and research
-developer documentation, government publications, and scientific papers using
-Firecrawl's hosted MCP tools.
+Firecrawl is the context API for AI agents. This plugin connects Claude to
+Firecrawl's hosted search tools to search the web, read the pages your searches
+find, look up Alexandria data providers for structured data, and research
+developer documentation, government publications, and scientific papers.
 
-This plugin includes three skills: `firecrawl`, `firecrawl-developer-index`,
-and `firecrawl-research-index`. It connects to Firecrawl's hosted MCP server
-(configured in `.mcp.json`). Connect your Firecrawl account through Claude
-Code's `/mcp` menu before using the tools.
+This plugin includes thirteen skills: three core search and research skills,
+plus workflows for brand assets, business contacts, website design, professional
+enrichment, lead discovery, fantasy sports, deep research, job openings,
+developer documentation, and SEO audits. It connects to Firecrawl's hosted MCP
+server, configured in `.mcp.json`.
 
 ## Install
+
+In Claude.ai or Cowork, upload the plugin ZIP through **Customize > Plugins >
+Add > Upload plugin**, then connect Firecrawl from the plugin's **Connectors**
+tab. Installing a plugin and connecting its tools are separate steps.
 
 In Claude Code, open `/plugin`, search for **firecrawl**, and install it.
 The official marketplace controls which release is available there.
@@ -52,6 +58,20 @@ The CLI skills and this plugin both include skills named `firecrawl`,
 CLI commands and the versions here call MCP tools. If you install both, Claude
 Code lists both.
 
+## Commands
+
+In Claude Code, the plugin also adds short commands:
+
+- `/firecrawl:setup` checks the account connection and explains how to connect
+  through `/mcp`.
+- `/firecrawl:search <query>` searches the web and cites the results.
+- `/firecrawl:scrape <url>` reads a page.
+- `/firecrawl:map <site>` lists pages found on a site through search and its links.
+- `/firecrawl:crawl <site>` reads several pages of a site and combines them.
+- `/firecrawl:agent <question>` runs a cited multi-source investigation.
+
+Plain requests work without a command; the skills choose the tools.
+
 ## Use
 
 - Find recent sources on a topic and summarize them with citations.
@@ -59,9 +79,15 @@ Code lists both.
 - Research a programming question using indexed repositories and documentation.
 - Find scientific papers and read passages relevant to a question.
 - Search US government publications and retrieve structured provider data.
+- Gather a company's existing identity assets or document a website's design.
+- Find business contacts, research one professional, or qualify a lead list.
+- Verify job openings, compare fantasy options, or audit pages for SEO issues.
+- Investigate a question across sources and produce a cited answer or report.
 
 The skills report connection and authentication failures so you can reconnect
-through `/mcp`.
+from the plugin's **Connectors** tab in Claude.ai and Cowork, or through `/mcp`
+in Claude Code. Requests send search queries, page URLs, and requested provider
+inputs to Firecrawl; include only the information needed for the task.
 
 ## Development
 
@@ -83,4 +109,5 @@ claude --plugin-dir .
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE). The `firecrawl-deep-research` skill carries its own
+ISC notice in [SKILL.md](skills/firecrawl-deep-research/SKILL.md).
