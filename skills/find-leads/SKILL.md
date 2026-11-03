@@ -1,6 +1,6 @@
 ---
 name: find-leads
-description: "Find professionals matching role, company, location, or expertise criteria. Use for prospect lists or expert and speaker discovery; return evidence of fit and professional profile links."
+description: Build a ranked list of professionals matching role, seniority, company size, location, technology or named target companies. Use for prospect lists, lead generation, decision-makers at target accounts, or experts and speakers in a field, even without an explicit search request. Return names, titles, companies and fit, with work emails when asked. Excludes enrichment of supplied people, organizational inboxes, private personal details and sending outreach.
 ---
 
 # Find and qualify leads

@@ -1,6 +1,6 @@
 ---
 name: brand-identity
-description: "Collect a named organization's existing logo, colors, fonts, and homepage messaging for a deck or document. Use for website-derived assets; report sourced links and observed styling."
+description: Collect a named organization's existing logo, color palette, fonts, and homepage messaging for a pitch deck, sales presentation, proposal, or other document. Use for requests such as making a slide match a company's website, finding the right logo and brand hex codes, or assembling a website-derived asset pack, even if the user never asks to scrape or search. Return sourced asset links and observed styling so the document can use the actual identity. Excludes inventing a brand, brand positioning advice, and styling from already sufficient supplied assets.
 ---
 
 # Gather identity assets for a document

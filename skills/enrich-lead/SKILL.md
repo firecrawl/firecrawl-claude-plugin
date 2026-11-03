@@ -1,6 +1,6 @@
 ---
 name: enrich-lead
-description: "Enrich one professional or a supplied list/CSV with role, employer, profile, history, and requested business fields. Use for a named person, professional profile, or existing leads; not prospecting."
+description: Enrich one professional or a supplied lead list/CSV and return a sourced contact card or enriched table with name, current title, employer, location, professional profile URL and employment history. Use for a name and company, a role at a named company, a professional profile URL or an email, even without an explicit search request. Include work email when asked, and company size, funding or technologies on request. Excludes discovering new prospects, organizational inboxes, private personal details and sending outreach.
 ---
 
 # Enrich supplied leads
