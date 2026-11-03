@@ -5,10 +5,10 @@ Firecrawl's hosted search tools to search the web, read the pages your searches
 find, look up Alexandria data providers for structured data, and research
 developer documentation, government publications, and scientific papers.
 
-This plugin includes thirteen skills: three core search and research skills,
+This plugin includes twelve skills: the core `firecrawl` skill,
 plus workflows for brand assets, business contacts, website design, professional
 enrichment, lead discovery, fantasy sports, deep research, job openings,
-developer documentation, and SEO audits. It connects to Firecrawl's hosted MCP
+developer documentation, research papers, and SEO audits. It connects to Firecrawl's hosted MCP
 server, configured in `.mcp.json`.
 
 ## Install
@@ -53,8 +53,7 @@ or as a Claude Code plugin from the Firecrawl skills catalog:
 /plugin install firecrawl@firecrawl-skills
 ```
 
-The CLI skills and this plugin both include skills named `firecrawl`,
-`firecrawl-developer-index` and `firecrawl-research-index`. The CLI versions run
+The CLI skills and this plugin both include a skill named `firecrawl`. The CLI versions run
 CLI commands and the versions here call MCP tools. If you install both, Claude
 Code lists both.
 

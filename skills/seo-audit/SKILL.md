@@ -1,6 +1,6 @@
 ---
 name: seo-audit
-description: "Inspect named pages for SEO metadata, headings, canonicals, schema, and link issues. Use for source-backed SEO audits and prioritized fixes; distinguish unverified checks from observed defects."
+description: Inspect a website's titles, meta descriptions, headings, canonicals, structured data and internal links for on-page and technical SEO issues. Use for SEO audits, page-source checks, broken-link reviews or comparing pages for target keywords, even without an explicit request to scrape. Return source-backed findings and prioritized fixes. Excludes generic SEO explanations, standalone copywriting and functional website testing.
 ---
 
 # Audit a site's SEO

@@ -1,6 +1,6 @@
 ---
 name: job-postings
-description: "Find current job postings by role, employer, location, or remote eligibility. Use for who's hiring, job shortlists, and openings matching supplied skills, experience, or pay preferences."
+description: Find current job postings on employer career pages and job boards. Use when the user asks who's hiring, seeks remote or local jobs, or wants openings matched to their role, skills, experience, or salary preferences.
 ---
 
 # Find suitable job openings

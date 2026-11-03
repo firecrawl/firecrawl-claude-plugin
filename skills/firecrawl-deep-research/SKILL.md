@@ -1,6 +1,6 @@
 ---
 name: firecrawl-deep-research
-description: "Investigate questions needing multi-source synthesis: deep dives, comparisons, or find-all lists. Prefer focused workflows for enrichment, prospecting, or docs; not quick lookups or shopping."
+description: Deep research with Firecrawl. Investigate questions needing multi-source synthesis and return a cited answer, report or table. Use for deep dives, cross-source comparisons, market and company investigations, and find-all questions requiring synthesized evidence. Prefer focused workflows for enrichment, prospect discovery or documentation when they can complete the task. Not for a single fact, one known page, or shopping advice such as best-of or top-N product picks.
 license: ISC
 ---
 
