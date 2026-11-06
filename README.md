@@ -5,10 +5,12 @@ Firecrawl's hosted search tools to search the web, read the pages your searches
 find, look up Alexandria data providers for structured data, and research
 developer documentation, government publications, and scientific papers.
 
-This plugin includes twelve skills: the core `firecrawl` skill,
+This plugin includes nineteen skills: the core `firecrawl` skill,
 plus workflows for brand assets, business contacts, website design, professional
 enrichment, lead discovery, fantasy sports, deep research, job openings,
-developer documentation, research papers, and SEO audits. It connects to Firecrawl's hosted MCP
+developer documentation, research papers, SEO audits, product prices, local
+businesses, video and podcast transcripts, news coverage, market data and SEC filings,
+property listings, and flights and hotels. It connects to Firecrawl's hosted MCP
 server, configured in `.mcp.json`.
 
 ## Install
