@@ -23,6 +23,13 @@ already collected; choosing a workflow does not require restarting retrieval.
 - **Collect existing logos, colors and fonts for a document:** `brand-identity`.
 - **Extract a reference website's UI system:** `design`.
 - **Find and verify current job openings:** `job-postings`.
+- **Check or compare prices, plans, fees or deals, stock or reviews:** `prices-and-plans`.
+- **Find local businesses, their hours, reviews or directions:** `local-businesses`.
+- **Read or summarize a video or podcast transcript:** `video-transcripts`.
+- **Gather dated news coverage:** `news-coverage`.
+- **Look up stock quotes, earnings or SEC filings:** `markets-and-filings`.
+- **Find rentals or homes for sale:** `property-listings`.
+- **Price flights or hotels for given dates:** `flights-and-hotels`.
 - **Research a fantasy roster decision:** `fantasy-sports`.
 - **Audit a site's SEO metadata, content and links:** `seo-audit`.
 - **Answer from official documentation:** `read-docs` for setup, usage,

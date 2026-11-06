@@ -1,6 +1,6 @@
 {
   "name": "firecrawl",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Firecrawl, the context API for AI agents: search the web, developer sources, government publications, and scientific papers, read the pages your searches find, and look up structured data from Alexandria providers.",
   "skills": [
     "./skills/brand-identity",
@@ -11,10 +11,17 @@
     "./skills/find-leads",
     "./skills/firecrawl",
     "./skills/firecrawl-deep-research",
+    "./skills/flights-and-hotels",
     "./skills/job-postings",
+    "./skills/local-businesses",
+    "./skills/markets-and-filings",
+    "./skills/news-coverage",
+    "./skills/prices-and-plans",
+    "./skills/property-listings",
     "./skills/read-docs",
     "./skills/read-literature",
-    "./skills/seo-audit"
+    "./skills/seo-audit",
+    "./skills/video-transcripts"
   ],
   "author": {
     "name": "Firecrawl"
