@@ -31,8 +31,11 @@ Use the method that best fills the most important gap, read the result, then dec
 | Needed evidence | Method |
 |---|---|
 | Web sources | `firecrawl_search` |
-| Page content or Alexandria records | `firecrawl_scrape` |
-| Alexandria provider contracts | `firecrawl_find_tools` |
+| Page content | `firecrawl_scrape` |
+| Broad research across unknown sites | `firecrawl_agent` |
+| Alexandria provider contracts | `alexandria_library_search` |
+| Alexandria records | `alexandria_library_read` |
+| People and company records | `people_company_search`, `people_company_enrich`, when exposed |
 | Code, repositories and API behavior | `firecrawl_developer_search`, when exposed |
 | Scientific papers | `firecrawl_research_search_papers`, `firecrawl_research_inspect_paper`, `firecrawl_research_read_paper` |
 | US laws and regulations | `firecrawl_gov_search` |
@@ -42,13 +45,15 @@ Prefer primary sources for factual claims; distinguish sources' own claims from 
 
 For PDF reads, including extensionless document URLs, use supported `parsers: ["pdf"]` and choose `pdfOptions.maxPages` for the needed evidence and any user limit. Treat truncated documents as partial coverage.
 
-**Alexandria records.** Prefer fitting records for comparable fields across many entities when coverage, access and cost fit; check entity type, geography and date coverage, not just topic. A catalogue suggestion is not retrieved data. Read the selected contract with `firecrawl_find_tools`, preserving selectors from its returned `nextTool.arguments`; a combined catalogue ID is not necessarily an execution selector. Execute through `firecrawl_scrape` Alexandria mode with the returned provider and capability IDs and only declared inputs. Inspect every returned item for errors, empty results and partial output. Discover missing entity IDs instead of guessing them. If terms or access block a provider, say so and continue with permitted routes.
+**Alexandria records.** Prefer fitting records for comparable fields across many entities when coverage, access and cost fit; check entity type, geography and date coverage, not just topic. A catalogue suggestion is not retrieved data. Read the selected contract with `alexandria_library_search`; its file path, `/library/<category>/<provider>/<capability>.md`, gives the execution selectors, and a combined catalogue ID is not necessarily one. Execute through `alexandria_library_read` with those provider and capability IDs and only declared inputs. Inspect every returned item for errors, empty results and partial output. Discover missing entity IDs instead of guessing them. If terms or access block a provider, say so and continue with permitted routes.
 
 Follow provider pagination only through declared inputs, preserving filters and user limits until the requested coverage is reached. Catalogue pagination lists contracts, not records. If paging stops early or no continuation is supported, report the remaining coverage gap.
 
 For uncertain Alexandria retries, reuse the same `requestId` and payload when supported; changed inputs require a new ID. Do not duplicate in-flight requests, replay successful batch items to recover failures, or silently rerun paid work after retained results expire.
 
 **Papers.** Discover studies, inspect canonical metadata and read relevant methods, results, tables or figures before relying on empirical claims. A research-category web filter is not the paper index. Distinguish paper text from generated summaries and disclose abstract-only support. Preserve the version read and publication status; check available withdrawal notices and linked journal versions when relevant. Versions of the same study are not independent corroboration. Use `firecrawl_research_related_papers` to close material gaps through references or citing papers.
+
+**Research agent.** Use `firecrawl_agent` sparingly, when broad collection across unknown sites materially improves coverage and fits time and credit limits. Apply user credit limits through `maxCredits` when supported, poll `firecrawl_agent_status` with bounded attempts, keep useful partial results, and reuse a job after a timeout instead of starting another.
 
 ## Resolve evidence gaps
 
@@ -93,20 +98,18 @@ Arguments for `firecrawl_search` when researching a web-policy angle; replace th
 }
 ```
 
-Arguments for `firecrawl_find_tools` only if the report needs structured observations:
+Arguments for `alexandria_library_search` only if the report needs structured observations:
 
 ```json
 {
-  "name": "firecrawl_find_tools",
+  "name": "alexandria_library_search",
   "arguments": {
-    "query": "electricity generation observations by country year with units and source dates",
-    "limit": 3,
-    "expand": []
+    "command": "grep -ril \"electricity generation\" /library | head -20"
   }
 }
 ```
 
-These return evidence candidates or catalogue summaries, not executed provider records. For a selected summary, copy its returned provider and capability IDs into a targeted `firecrawl_find_tools` call with `expand: ["options", "response"]`; build execution options from that contract. Do not invent a provider, capability, or field to make an example executable.
+These return evidence candidates or library file paths, not executed provider records. For a selected capability, read its contract with a targeted `alexandria_library_search` command such as `cat /library/<category>/<provider>/<capability>.md`; build execution options from that contract. Do not invent a provider, capability, or field to make an example executable.
 
 Example PDF read with `firecrawl_scrape`; choose `maxPages` for the evidence needed and any user limit:
 

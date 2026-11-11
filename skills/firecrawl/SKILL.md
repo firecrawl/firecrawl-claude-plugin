@@ -48,7 +48,10 @@ searches and page reads, choose the operation below directly.
 Web, developer, and paper searches are billed per
 request. Government search is free. Provider-only discovery
 is free. Page retrieval is billed per URL; provider execution uses the
-capability's listed price.
+capability's listed price. People and company search and enrichment charge the
+per-provider prices in their tool descriptions, capped by `max_credits`;
+enrichment misses are free. A research agent run is billed for the work it
+does, capped by `maxCredits`.
 
 - **Find sources:** `firecrawl_search` returns ranked results and excerpts.
   Use only arguments and output formats supported by the current live schema.
@@ -62,8 +65,24 @@ capability's listed price.
   `firecrawl_research_inspect_paper` retrieves metadata;
   `firecrawl_research_related_papers` expands citation relationships; and
   `firecrawl_research_read_paper` retrieves passages answering a question.
-- **Retrieve provider data:** see [data providers](references/data-providers.md)
-  for `firecrawl_find_tools` and provider execution through `firecrawl_scrape`.
+- **Find or enrich people and companies:** `people_company_search` finds
+  people or companies by filters such as title, employer, location, industry
+  or headcount; `people_company_enrich` looks up known people or companies,
+  with work email on request. Use them before Alexandria people and company
+  providers when the connection exposes them; `find-leads` and `enrich-lead`
+  cover lead lists.
+- **Research across sources:** `firecrawl_agent` gathers structured data when
+  the task spans sources or the URLs are not known. It spends credits, so use
+  it only when search and page reads cannot cover the task, and pass the
+  user's credit limit as `maxCredits`. It returns a job ID:
+  retrieve the result with `firecrawl_agent_status` using bounded waits until
+  the job completes or fails, without submitting a duplicate job. If the wait
+  must end first, report the pending job ID and complete the requested output
+  with `firecrawl_search` and `firecrawl_scrape`.
+- **Use Alexandria providers:** for structured records, inspect a matching
+  capability with `alexandria_library_search` when its contract is not already
+  available, then execute it through `alexandria_library_read`. See
+  [data providers](references/data-providers.md) for discovery and execution.
 
 Choose only the operations needed to answer the request. The live tool schema
 is the authority for accepted parameters. Use only the operations listed above
