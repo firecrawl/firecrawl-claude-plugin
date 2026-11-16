@@ -14,12 +14,21 @@ build `options`, and execute with `alexandria_library_read` using
 `calls: [{provider, capability, options}]`. Preserve returned identifiers;
 do not invent provider names, capability names, or required inputs.
 
-`firecrawl_find_tools` answers the catalogue questions the library files do
-not: `urls` finds the providers for a website, `query` matches a data need by
-meaning, and `includeCosts: true` returns each capability's listed credit price.
+The same commands answer the other catalogue questions. For the providers of a
+website, list the provider folders named after it, with its dots as hyphens,
+such as `ls -d /library/*/*sec-gov*`, then the providers whose README names it:
+`grep -rli "<domain>" /library --include=README.md | head -20`. For a data need
+you can only describe, `cat /library/README.md` to pick the category and grep
+several words for the need inside it, such as
+`grep -rilE "rent|lease" /library/real-estate | head -20`.
+These commands match names and text, so an empty result does not prove that no
+provider covers the need: try another word, or the name of the site, before
+concluding none does.
 
-Check the capability's stated price and external effects against the user's
-request before execution; a capability priced over the user's limit does not
-fit. If access is unavailable or no capability fits, use
+A contract states a credit price only where its provider wrote one into the
+text; `alexandria_library_read` reports what a call charged as `creditsCost`.
+Check the stated price and external effects against the user's request before
+execution; a capability priced over the user's limit does not fit. If
+access is unavailable or no capability fits, use
 `firecrawl_search` and page retrieval where suitable. Read the executed result
 before answering; a catalogue match alone does not supply the requested data.
