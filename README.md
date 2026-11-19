@@ -1,6 +1,6 @@
 # Firecrawl for Claude
 
-Firecrawl is the context API for AI agents. This plugin connects Claude to
+Firecrawl is knowledge infrastructure to make your agents smarter. This plugin connects Claude to
 Firecrawl's hosted search tools to search the web, read the pages your searches
 find, look up Alexandria data providers for structured data, and research
 developer documentation, government publications, and scientific papers.
